@@ -12,6 +12,8 @@
               <th scope="col">NAME</th>
               <th scope="col">YEAR</th>
               <th scope="col">RANK</th>
+              <th scope="col">DELETE</th>
+              <th scope="col">UPDATE</th>
           </tr>
           </thead>
           <tbody>
@@ -21,6 +23,16 @@
               <td>{{name}}</td>
               <td>{{year}}</td>
               <td>{{rank}}</td>
+              <td>
+                  <button class = "delete">
+                      DELETE
+                  </button>
+              </td>
+              <td>
+                  <button class = "update">
+                      UPDATE
+                  </button>
+              </td>
           </tr>
           {{/each}}
 

@@ -7,6 +7,7 @@ const con = mysql.createConnection({
     database: "imdb"
 });
 
+// Load from node 1
 con.connect(function(err) {
     if (err) throw err;
 
@@ -14,4 +15,5 @@ con.connect(function(err) {
         if (err) throw err;
         console.log(result);
     });
+
 });
