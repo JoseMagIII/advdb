@@ -1,0 +1,19 @@
+{
+  "name": "advdb",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bootstrap": "^5.1.3",
+    "dotenv": "^14.3.2",
+    "express": "^4.17.2",
+    "hbs": "^4.2.0",
+    "mysql": "^2.18.1"
+  }
+}
