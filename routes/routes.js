@@ -8,6 +8,7 @@ const Controller = require(`../controllers/Controller.js`);
 const app = express();
 
 app.get('/', Controller.getIndex);
+app.get('/rowDelete', Controller.rowDelete);
 
 //Reference
 //app.get(`/addComment`, GameController.addComment);
