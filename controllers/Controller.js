@@ -22,133 +22,131 @@ const con3 = mysql.createConnection({
 	database: "imdb"
 });
 
+var node1isOn = true;
+var node2isOn = true;
+var node3isOn = true;
+
+// Check node connections
+con1.connect(function (err) {
+	if (err)
+		node1isOn = false;
+});
+con2.connect(function (err) {
+	if (err)
+		node2isOn = false;
+});
+con3.connect(function (err) {
+	if (err)
+		node3isOn = false;
+});
+
 
 const controller = {
 
+	// MAKE TRANSACTIONS
 	getIndex: function (req, res) {
 
-		let node1isOn = true;
-		let node2isOn = true;
-		let node3isOn = true;
-
-		// Check node connections
-		con1.connect(function (err) {
-			if (err)
-				node1isOn = false;
-
-			con2.connect(function (err) {
-				if (err)
-					node2isOn = false;
-
-				con3.connect(function (err) {
-					if (err)
-						node3isOn = false;
-
-
 					// If node 1 is online load from node 1
-					if (node1isOn)
+					if (node1isOn) {
+						con1.query("START TRANSACTION", function (err5, data, fields) {
+						});
 						con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
 							if (err5) throw err5;
 							res.render('Home', {data});
 							console.log(data);
-
 						});
+						con1.query("COMMIT", function (err5, data, fields) {
+						});
+					}
 
 					// If node 2 and 3 are online load from node 2 and 3
-					else if (node2isOn && node3isOn)
+					else if (node2isOn && node3isOn) {
+						con2.query("START TRANSACTION", function (err5, data, fields) {
+						});
 						con2.query("SELECT * FROM movies LIMIT 50", function (err3, data2, fields) {
 							if (err3) throw err3;
 
 							else {
+								con2.query("COMMIT", function (err5, data, fields) {
+								});
 
-
+								con3.query("START TRANSACTION", function (err5, data, fields) {
+								});
 								con3.query("SELECT * FROM movies LIMIT 50", function (err4, data3, fields) {
 									if (err4) throw err4;
 
 									data = [];
 									data = data.concat(data2, data3);
-
 									res.render('Home', {data});
 									console.log(data);
 								});
+								con3.query("COMMIT", function (err5, data, fields) {
+								});
 							}
-
-
 						});
-
+					}
 					// else Render error screen
 					else
 						res.render('Home');
 
-				});
-			});
-		});
 	},
 
-	// TEMPORARY TINAMAD NA KO SORRY
 
 	rowDelete: function (req, res) {
 		//Get variables
 		let id = req.query.ID;
+		let year = req.query.rowYEAR;
+		let yearnum = parseInt(year);
+		let query = "DELETE FROM movies WHERE id = " + id
 
-		let node1isOn = true;
-		let node2isOn = true;
-		let node3isOn = true;
 
 		// Check node connections
-		con1.connect(function (err) {
-			if (err)
-				node1isOn = false;
-
-			con2.connect(function (err) {
-				if (err)
-					node2isOn = false;
-
-				con3.connect(function (err) {
-					if (err)
-						node3isOn = false;
-
-
 					// If node 1 is online load from node 1
-					if (node1isOn)
-						con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
+					if (node1isOn) {
+						con1.query("START TRANSACTION", function (err5, data, fields) {
+						});
+						con1.query(query, function (err5, result) {
 							if (err5) throw err5;
-							res.render('Home', {data});
-							console.log(data);
 
+							console.log("Number of records deleted: " + result.affectedRows);
+						});
+						con1.query("COMMIT", function (err5, data, fields) {
 						});
 
-					// If node 2 and 3 are online load from node 2 and 3
-					else if (node2isOn && node3isOn)
-						con2.query("SELECT * FROM movies LIMIT 50", function (err3, data2, fields) {
-							if (err3) throw err3;
+						if(node2isOn && yearnum < 1980)
+						{
+							con2.query("START TRANSACTION", function (err5, data, fields) {
+							});
+							con2.query(query, function (err3, result) {
+								if (err3) throw err3;
 
-							else {
+								console.log("Number of records deleted: " + result.affectedRows);
+							});
+							con2.query("COMMIT", function (err5, data, fields) {
+							});
+						}
+
+						// ELSE ADD TO TRANSACTIONS TABLE
+
+						if(node3isOn && yearnum >= 1980)
+						{
+							con3.query("START TRANSACTION", function (err5, data, fields) {
+							});
+							con3.query(query, function (err, result) {
+								if (err) throw err;
+
+								console.log("Number of records deleted: " + result.affectedRows);
+							});
+							con1.query("COMMIT", function (err5, data, fields) {
+							});
+						}
+
+						// ELSE ADD TO TRANSACTIONS TABLE
 
 
-								con3.query("SELECT * FROM movies LIMIT 50", function (err4, data3, fields) {
-									if (err4) throw err4;
+					}
+		res.redirect('/')
 
-									data = [];
-									data = data.concat(data2, data3);
-
-									res.render('Home', {data});
-									console.log(data);
-								});
-							}
-
-
-						});
-
-					// else Render error screen
-					else
-						res.render('Home');
-
-				});
-			});
-		});
-
-		res.send(true);
 	},
 
 }
