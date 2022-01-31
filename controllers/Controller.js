@@ -85,6 +85,7 @@ const controller = {
 							}
 						});
 					}
+
 					// else Render error screen
 					else
 						res.render('Home');
@@ -100,7 +101,6 @@ const controller = {
 		let query = "DELETE FROM movies WHERE id = " + id
 
 
-		// Check node connections
 					// If node 1 is online load from node 1
 					if (node1isOn) {
 						con1.query("START TRANSACTION", function (err5, data, fields) {
@@ -127,6 +127,17 @@ const controller = {
 						}
 
 						// ELSE ADD TO TRANSACTIONS TABLE
+						else
+						if(!node2isOn && yearnum < 1980)
+						{
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node2\")", function (err5, result) {
+							});
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\"" + ", \"node2\")", function (err5, result) {
+							});
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node2\")", function (err5, result) {
+							});
+						}
+
 
 						if(node3isOn && yearnum >= 1980)
 						{
@@ -137,16 +148,67 @@ const controller = {
 
 								console.log("Number of records deleted: " + result.affectedRows);
 							});
-							con1.query("COMMIT", function (err5, data, fields) {
+							con3.query("COMMIT", function (err5, data, fields) {
 							});
 						}
 
 						// ELSE ADD TO TRANSACTIONS TABLE
+						else
+						if(!node3isOn && yearnum >= 1980)
+						{
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node3\")", function (err5, result) {
+							});
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\"" + ", \"node3\")", function (err5, result) {
+							});
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node3\")", function (err5, result) {
+							});
+						}
+					}
 
+				else if (node2isOn && node3isOn){
+
+						if(yearnum < 1980)
+						{
+							con2.query("START TRANSACTION", function (err5, data, fields) {
+							});
+							con2.query(query, function (err3, result) {
+								if (err3) throw err3;
+
+								console.log("Number of records deleted: " + result.affectedRows);
+							});
+							con2.query("COMMIT", function (err5, data, fields) {
+							});
+
+							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node1\")", function (err5, result) {
+							});
+							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\"" + ", \"node1\")", function (err5, result) {
+							});
+							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node1\")", function (err5, result) {
+							});
+						}
+
+						else
+						if(yearnum >= 1980)
+						{
+							con3.query("START TRANSACTION", function (err5, data, fields) {
+							});
+							con3.query(query, function (err, result) {
+								if (err) throw err;
+
+								console.log("Number of records deleted: " + result.affectedRows);
+							});
+							con3.query("COMMIT", function (err5, data, fields) {
+							});
+
+							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node1\")", function (err5, result) {
+							});
+							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\"" + ", \"node1\")", function (err5, result) {
+							});
+							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node1\")", function (err5, result) {
+							});
+						}
 
 					}
-		res.redirect('/')
-
 	},
 
 }
