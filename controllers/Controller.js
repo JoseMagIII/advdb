@@ -214,6 +214,13 @@ const controller = {
 					}
 	},
 
+
+	//controller for view insert page
+	viewInsertPage: function(req, res){
+		var details = {};
+		res.render('Insert', details);
+	}
+
 }
 
 module.exports = controller;
