@@ -22,7 +22,7 @@ const con3 = mysql.createConnection({
 	database: "imdb"
 });
 
-var node1isOn = false;
+var node1isOn = true;
 var node2isOn = true;
 var node3isOn = true;
 
@@ -48,15 +48,86 @@ const controller = {
 	// MAKE TRANSACTIONS
 	getIndex: function (req, res) {
 
+		// Add Recovery
+
+		// Check if recovery tables are empty
+		con1.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+			if (err5) throw err5;
+		//	console.log(data);
+
+		});
+
+		con2.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+			if (err5) throw err5;
+		//	console.log(data);
+		});
+
+		con3.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+			if (err5) throw err5;
+		//	console.log(data);
+		});
+
+
 					// If node 1 is online load from node 1
 					if (node1isOn) {
+
+						// Recover to/from node 2
+						if(node2isOn)
+						{
+							con2.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+								data.forEach(function(ROW) {
+									con1.query(ROW.QUERY, function (err5, data, fields) {
+										if (err5) throw err5;
+									});
+								});
+								con2.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+								});
+							});
+						}
+
+						// Recover from node 3
+						if(node3isOn)
+						{
+							con3.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+								data.forEach(function(ROW) {
+									con1.query(ROW.QUERY, function (err5, data, fields) {
+										if (err5) throw err5;
+									});
+								});
+								con3.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+								});
+							});
+						}
+
+						if(node2isOn && node3isOn)
+						{
+							con1.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+								data.forEach(function(ROW) {
+
+									if(ROW.NODE = "node2")
+									con2.query(ROW.QUERY, function (err5, data, fields) {
+										if (err5) throw err5;
+									});
+
+									else
+									con3.query(ROW.QUERY, function (err5, data, fields) {
+										if (err5) throw err5;
+									});
+								});
+
+
+								con1.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+								});
+							});
+						}
 
 						con1.query("START TRANSACTION", function (err5, data, fields) {
 						});
 						con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
 							if (err5) throw err5;
 							res.render('Home', {data});
-							console.log(data);
+
 						});
 						con1.query("COMMIT", function (err5, data, fields) {
 						});
@@ -79,9 +150,8 @@ const controller = {
 									if (err4) throw err4;
 
 									data = [];
-									data = data.concat(data2, data3);
+									data = data.concat(data3, data2);
 									res.render('Home', {data});
-									console.log(data);
 								});
 								con3.query("COMMIT", function (err5, data, fields) {
 								});
@@ -135,7 +205,7 @@ const controller = {
 						{
 							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node2\")", function (err5, result) {
 							});
-							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\\" + query + "\"" + ", \"node2\")", function (err5, result) {
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node2\")", function (err5, result) {
 							});
 							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node2\")", function (err5, result) {
 							});
@@ -161,7 +231,7 @@ const controller = {
 						{
 							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node3\")", function (err5, result) {
 							});
-							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\"" + ", \"node3\")", function (err5, result) {
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node3\")", function (err5, result) {
 							});
 							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node3\")", function (err5, result) {
 							});
@@ -184,7 +254,7 @@ const controller = {
 
 							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node1\")", function (err5, result) {
 							});
-							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\"" + ", \"node1\")", function (err5, result) {
+							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node1\")", function (err5, result) {
 							});
 							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node1\")", function (err5, result) {
 							});
@@ -205,7 +275,7 @@ const controller = {
 
 							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node1\")", function (err5, result) {
 							});
-							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\"" + ", \"node1\")", function (err5, result) {
+							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node1\")", function (err5, result) {
 							});
 							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node1\")", function (err5, result) {
 							});
