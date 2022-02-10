@@ -10,6 +10,7 @@ const app = express();
 app.get('/', Controller.getIndex);
 app.get('/rowDelete', Controller.rowDelete);
 
+app.get("/insert", Controller.viewInsertPage);
 //Reference
 //app.get(`/addComment`, GameController.addComment);
 
