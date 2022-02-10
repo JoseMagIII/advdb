@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 
 const con1 = mysql.createConnection({
-	host: "node1-2.cjxmg4tjsfwi.ap-southeast-1.rds.amazonaws.com",
+	host: "node1.ckcjtnmnctpq.ap-southeast-1.rds.amazonaws.com",
 	user: "admin",
 	password: "password",
 	database: "imdb"
@@ -10,7 +10,7 @@ const con1 = mysql.createConnection({
 const con2 = mysql.createConnection({
 	host: "node2.c0sjx10dpii7.ap-southeast-1.rds.amazonaws.com",
 	user: "admin",
-	password: "12345678",
+	password: "password",
 	database: "imdb"
 });
 
@@ -22,7 +22,7 @@ const con3 = mysql.createConnection({
 	database: "imdb"
 });
 
-var node1isOn = true;
+var node1isOn = false;
 var node2isOn = true;
 var node3isOn = true;
 
@@ -31,10 +31,12 @@ con1.connect(function (err) {
 	if (err)
 		node1isOn = false;
 });
+
 con2.connect(function (err) {
 	if (err)
 		node2isOn = false;
 });
+
 con3.connect(function (err) {
 	if (err)
 		node3isOn = false;
@@ -48,6 +50,7 @@ const controller = {
 
 					// If node 1 is online load from node 1
 					if (node1isOn) {
+
 						con1.query("START TRANSACTION", function (err5, data, fields) {
 						});
 						con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
@@ -132,7 +135,7 @@ const controller = {
 						{
 							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node2\")", function (err5, result) {
 							});
-							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\"" + ", \"node2\")", function (err5, result) {
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\\" + query + "\"" + ", \"node2\")", function (err5, result) {
 							});
 							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node2\")", function (err5, result) {
 							});
