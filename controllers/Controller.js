@@ -22,7 +22,7 @@ const con3 = mysql.createConnection({
 	database: "imdb"
 });
 
-var node1isOn = true;
+var node1isOn = false;
 var node2isOn = true;
 var node3isOn = true;
 
@@ -42,8 +42,37 @@ con3.connect(function (err) {
 		node3isOn = false;
 });
 
+function sortItems(array) {
+	for (let i = 0; i < 199; i++) {
+
+		for (let j = 0; j < 199; j++) {
+			if (array[j].id > array[j + 1].id) {
+				let temp = array[j];
+				array[j] = array[j + 1];
+				array[j + 1] = temp;
+			}
+		}
+	}
+	return array.splice(0, 100);
+}
+
+function sorItemstop10(array) {
+	for (let i = 0; i < 20; i++) {
+
+		for (let j = 0; j < 19; j++) {
+			if (array[j].id > array[j + 1].id) {
+				let temp = array[j];
+				array[j] = array[j + 1];
+				array[j + 1] = temp;
+			}
+		}
+	}
+	return array.splice(0, 10);
+}
 
 const controller = {
+
+
 
 	// MAKE TRANSACTIONS
 	getIndex: function (req, res) {
@@ -127,7 +156,6 @@ const controller = {
 						con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
 							if (err5) throw err5;
 							res.render('Home', {data});
-
 						});
 						con1.query("COMMIT", function (err5, data, fields) {
 						});
@@ -139,7 +167,7 @@ const controller = {
 
 						con2.query("START TRANSACTION", function (err5, data, fields) {
 						});
-						con2.query("SELECT * FROM movies LIMIT 50", function (err3, data2, fields) {
+						con2.query("SELECT * FROM movies LIMIT 100", function (err3, data2, fields) {
 							if (err3) throw err3;
 
 							else {
@@ -148,11 +176,13 @@ const controller = {
 
 								con3.query("START TRANSACTION", function (err5, data, fields) {
 								});
-								con3.query("SELECT * FROM movies LIMIT 50", function (err4, data3, fields) {
+								con3.query("SELECT * FROM movies LIMIT 100", function (err4, data3, fields) {
 									if (err4) throw err4;
 
 									data = [];
 									data = data.concat(data3, data2);
+									// D KO ALAM PANO ISORT YUNG DATA
+									data = sortItems(data)
 									res.render('Home', {data});
 								});
 								con3.query("COMMIT", function (err5, data, fields) {
@@ -297,14 +327,42 @@ const controller = {
 
 	getNode: function(req, res){
 		if(node1isOn)
-		res.send('You are accessing this page from Node 1');
+			res.send('You are accessing this page from Node 1');
 
 		else
 		if(node2isOn && node3isOn)
-		res.send('You are accessing this page from Nodes 2 and 3');
+			res.send('You are accessing this page from Nodes 2 and 3');
 
 		else
-		res.send('All nodes are offline');
+			res.send('All nodes are offline');
+
+	},
+
+	top10: function(req, res){
+		if(node1isOn)
+		con1.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data, fields) {
+			if (err5) throw err5;
+
+			res.render('Home', {data});
+		});
+
+		else
+		if(node2isOn && node3isOn)
+		{
+			con2.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data1, fields) {
+				if (err5) throw err5;
+
+				con3.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data2, fields) {
+					if (err5) throw err5;
+
+					data = [];
+					data = data.concat(data1, data2);
+
+					data = sorItemstop10(data);
+					res.render('Home', {data});
+				});
+			});
+		}
 
 	}
 

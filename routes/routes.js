@@ -12,6 +12,7 @@ app.get('/rowDelete', Controller.rowDelete);
 
 app.get("/insert", Controller.viewInsertPage);
 app.get("/getNode", Controller.getNode);
+app.get("/top10", Controller.top10);
 //Reference
 //app.get(`/addComment`, GameController.addComment);
 
