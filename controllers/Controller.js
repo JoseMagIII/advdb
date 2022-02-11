@@ -135,6 +135,8 @@ const controller = {
 
 					// If node 2 and 3 are online load from node 2 and 3
 					else if (node2isOn && node3isOn) {
+
+
 						con2.query("START TRANSACTION", function (err5, data, fields) {
 						});
 						con2.query("SELECT * FROM movies LIMIT 50", function (err3, data2, fields) {
@@ -285,10 +287,25 @@ const controller = {
 	},
 
 
+
+
 	//controller for view insert page
 	viewInsertPage: function(req, res){
 		var details = {};
 		res.render('Insert', details);
+	},
+
+	getNode: function(req, res){
+		if(node1isOn)
+		res.send('You are accessing this page from Node 1');
+
+		else
+		if(node2isOn && node3isOn)
+		res.send('You are accessing this page from Nodes 2 and 3');
+
+		else
+		res.send('All nodes are offline');
+
 	}
 
 }
