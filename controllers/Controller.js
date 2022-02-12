@@ -482,6 +482,25 @@ const controller = {
 				});
 			});
 		}
+	},
+
+	searchMovie: function(req, res){
+		if (node1isOn){
+			let name = req.query.movieName;
+
+			con1.query("START TRANSACTION", function (err5, data, fields) {
+			});
+			con1.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"a%\"", function (err5, data, fields) {
+				if (err5) throw err5;
+
+				res.render('Home', {data});
+
+				console.log(data);
+
+				con1.query("COMMIT", function (err5, data, fields) {
+				});
+			});
+		}
 	}
 
 }

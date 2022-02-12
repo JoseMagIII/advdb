@@ -20,4 +20,15 @@ $(document).ready(function () {
         });
     });
 
+    $(".btnSearch").on('click', function(){
+        let name = $("#txtSearch");
+        let movieName = name.val();
+
+        console.log(movieName);
+        console.log(name);
+
+        $.get('/searchMovie', {movieName: movieName}, function (result) {
+        });
+    });
+
 });
