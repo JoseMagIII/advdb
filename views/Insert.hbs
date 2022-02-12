@@ -7,12 +7,12 @@
 
     <body>
         <h1>Insert a New Record</h1>
-        <form>
-            <p>ID #: <input type="text" id = "idNumber" required> </p>
-            <p>Name: <input type="text" id = "name" required> </p>
-            <p>Year: <input type="text" id = "year" required> </p>
-            <p>Rank: <input type="text" id = "rank" required> </p>
+        <form method="get" action="/insertRecord">
+            <p>ID #: <input name = "idNum" type="text" id = "idNum" required> </p>
+            <p>Name: <input name = "movieName" type="text" id = "movieName" required> </p>
+            <p>Year: <input name = "year" type="text" id = "year" required> </p>
+            <p>Rank: <input name = "rank" type="text" id = "rank" required> </p>
             <input type="submit" id="btnInsert" value="Insert">
-        </form>        
+        </form>            
     </body>
 </html>

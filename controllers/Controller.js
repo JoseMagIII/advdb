@@ -431,6 +431,129 @@ const controller = {
 		res.render('Insert', details);
 	},
 
+	insertRecord: function (req, res) {
+		//Get variables
+		var details = {};
+		let idNum = req.param("idNum");
+		let movieName = req.param("movieName");
+		let year = req.param("year");
+		let rank = req.param("rank");
+		let yearnum = parseInt(year);
+		let query = "INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');"
+
+
+					// If node 1 is online load from node 1
+					if (node1isOn) {
+						con1.query("START TRANSACTION", function (err5, data, fields) {
+						});
+						con1.query(query, function (err5, result) {
+							if (err5) throw err5;
+
+							console.log("New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
+						});
+						con1.query("COMMIT", function (err5, data, fields) {
+						});
+
+						if(node2isOn && yearnum < 1980)
+						{
+							con2.query("START TRANSACTION", function (err5, data, fields) {
+							});
+							con2.query(query, function (err3, result) {
+								if (err3) throw err3;
+
+								console.log("New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
+							});
+							con2.query("COMMIT", function (err5, data, fields) {
+							});
+						}
+
+						// ELSE ADD TO TRANSACTIONS TABLE
+						else
+						if(!node2isOn && yearnum < 1980)
+						{
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node2\")", function (err5, result) {
+							});
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node2\")", function (err5, result) {
+							});
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node2\")", function (err5, result) {
+							});
+						}
+
+
+						if(node3isOn && yearnum >= 1980)
+						{
+							con3.query("START TRANSACTION", function (err5, data, fields) {
+							});
+							con3.query(query, function (err, result) {
+								if (err) throw err;
+
+								console.log("New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
+							});
+							con3.query("COMMIT", function (err5, data, fields) {
+							});
+						}
+
+						// ELSE ADD TO TRANSACTIONS TABLE
+						else
+						if(!node3isOn && yearnum >= 1980)
+						{
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node3\")", function (err5, result) {
+							});
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node3\")", function (err5, result) {
+							});
+							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node3\")", function (err5, result) {
+							});
+						}
+					}
+
+				else if (node2isOn && node3isOn){
+
+						if(yearnum < 1980)
+						{
+							con2.query("START TRANSACTION", function (err5, data, fields) {
+							});
+							con2.query(query, function (err3, result) {
+								if (err3) throw err3;
+
+								console.log("New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
+							});
+							con2.query("COMMIT", function (err5, data, fields) {
+							});
+
+							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node1\")", function (err5, result) {
+							});
+							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node1\")", function (err5, result) {
+							});
+							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node1\")", function (err5, result) {
+							});
+						}
+
+						else
+						if(yearnum >= 1980)
+						{
+							con3.query("START TRANSACTION", function (err5, data, fields) {
+							});
+							con3.query(query, function (err, result) {
+								if (err) throw err;
+
+								console.log("New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
+							});
+							con3.query("COMMIT", function (err5, data, fields) {
+							});
+
+							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node1\")", function (err5, result) {
+							});
+							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node1\")", function (err5, result) {
+							});
+							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node1\")", function (err5, result) {
+							});
+						}
+
+					}
+
+					res.render('insertSuccess', details);
+	},
+
 	getNode: function(req, res){
 		if(node1isOn)
 			res.send('You are accessing the data from Node 1');
