@@ -310,7 +310,7 @@ const controller = {
 		let id = req.query.ID;
 		let year = req.query.rowYEAR;
 		let yearnum = parseInt(year);
-		let query = "DELETE FROM movies WHERE id = " + id
+		let query = "DELETE FROM movies WHERE id = " + id;
 
 
 					// If node 1 is online load from node 1
@@ -482,8 +482,66 @@ const controller = {
 				});
 			});
 		}
+<<<<<<< Updated upstream
 	}
+=======
 
+	},
+
+	viewUpdatePage: function(req, res){
+		let id = req.query.ID;
+		let yearnum = req.query.rowYEAR
+		let year = parseInt(yearnum);
+		let name = req.query.rowNAME;
+		let rank = req.query.rowRANK;
+		let query = "SELECT * FROM movies WHERE id = " + id;
+		var details = {};
+
+		// if (node1isOn) {
+		// 	con1.query(query, function (err, result) {
+		// 		if (err) throw err;
+		// 	});
+		// } 
+		// else if (node2isOn && yearnum < 1980) {
+
+		// }
+
+		// else if (node3isOn && yearnum >= 1980) {
+
+		// }
+
+		// details.idNum = result.ID;
+		// details.name = result.name;
+		// details.year = result.rowYEAR;
+		// details.rank = result.rank;
+		details.id = id;
+		details.year = year;
+		details.name = name;
+		details.rank = rank;
+		res.render('Update', details);
+	},
+>>>>>>> Stashed changes
+
+	rowUpdate: function (req, res) {
+		let id = req.query.ID;
+		let yearnum = req.query.rowYEAR
+		let year = parseInt(year);
+
+		if (node1isOn) {
+			con1.query("START TRANSACTION", function (err, data, fields) {	
+			});
+			con1.query(query, function (err, result) {
+				if (err) throw err;
+			});
+		} 
+		else if (node2isOn && yearnum < 1980) {
+
+		}
+
+		else if (node3isOn && yearnum >= 1980) {
+
+		}
+	}
 }
 
 module.exports = controller;
