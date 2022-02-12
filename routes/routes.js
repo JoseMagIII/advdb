@@ -9,7 +9,9 @@ const app = express();
 
 app.get('/', Controller.getIndex);
 app.get('/rowDelete', Controller.rowDelete);
+app.get('/rowUpdate', Controller.rowUpdate);
 
+app.get("/update", Controller.viewUpdatePage);
 app.get("/insert", Controller.viewInsertPage);
 app.get("/getNode", Controller.getNode);
 app.get("/top10", Controller.top10);
@@ -19,6 +21,6 @@ app.get("/searchMovie", Controller.searchMovie);
 //Reference
 //app.get(`/addComment`, GameController.addComment);
 
-	
+
 
 module.exports = app;
