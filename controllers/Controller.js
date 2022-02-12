@@ -485,10 +485,15 @@ const controller = {
 	},
 
 	searchMovie: function (req, res){
+
+		search = req.param("searchname");
+		console.log(search);
+
 		if(node1isOn) {
+
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 			});
-			con1.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"a%\";", function (err5, data, fields) {
+			con1.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\" LIMIT 100;", function (err5, data, fields) {
 				if (err5) throw err5;
 
 				res.render('Home', {data});
