@@ -7,17 +7,17 @@
 	<title>Initial Page</title>
   </head> 
   <body>
-      <div style="position: absolute; top: 20px; right: 50px; text-align: right;">
-        <a href="/insert"><button id="btnInsert"> Insert New Record </button> </a>
-        </div>
-      <div style="position: absolute; top: 20px; right: 200px; text-align: right;">
+      <div style="position: relative; top: 20px; right: 50px; text-align: right;">
+          <a href="/insert"><button id="btnInsert"> Insert New Record </button> </a>
           <a href="/top10"><button id="top10"> Show top 10</button> </a>
-      </div>
-      <div style="position: absolute; top: 20px; right: 310px; text-align: right;">
           <a href="/"><button id="getAll">Show All</button> </a>
-      </div>
+        </div>
         <br>
         <br>
+        <div style="position: relative; top: 0px; right: 50px; text-align: right;">
+            <input type="text" id = "txtSearch" name:"txtSearch" required>
+            <button id="btnSearch"> Search </button>
+        </div>
         <br>
       <table class="table" >
           <thead>
