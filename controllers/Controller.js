@@ -434,10 +434,10 @@ const controller = {
 	insertRecord: function (req, res) {
 		//Get variables
 		var details = {};
-		let idNum = req.param("idNum");
-		let movieName = req.param("movieName");
-		let year = req.param("year");
-		let rank = req.param("rank");
+		let idNum = req.query.idNum;
+		let movieName = req.query.movieName;
+		let year = req.query.year;
+		let rank = req.query.rank;
 		let yearnum = parseInt(year);
 		let query = "INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');"
 
