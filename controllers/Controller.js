@@ -164,7 +164,6 @@ const controller = {
 					// If node 2 and 3 are online load from node 2 and 3
 					else if (node2isOn && node3isOn) {
 
-
 						con2.query("START TRANSACTION", function (err5, data, fields) {
 						});
 						con2.query("SELECT * FROM movies LIMIT 100", function (err3, data2, fields) {
@@ -327,11 +326,11 @@ const controller = {
 
 	getNode: function(req, res){
 		if(node1isOn)
-			res.send('You are accessing this page from Node 1');
+			res.send('You are accessing the data from Node 1');
 
 		else
 		if(node2isOn && node3isOn)
-			res.send('You are accessing this page from Nodes 2 and 3');
+			res.send('You are accessing the data from Nodes 2 and 3');
 
 		else
 			res.send('All nodes are offline');
@@ -339,19 +338,30 @@ const controller = {
 	},
 
 	top10: function(req, res){
-		if(node1isOn)
-		con1.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data, fields) {
-			if (err5) throw err5;
+		if(node1isOn) {
+			con1.query("START TRANSACTION", function (err5, data, fields) {
+			});
+			con1.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data, fields) {
+				if (err5) throw err5;
 
-			res.render('Home', {data});
-		});
+				res.render('Home', {data});
+			con1.query("COMMIT", function (err5, data, fields) {
+			});
+			});
+		}
 
 		else
 		if(node2isOn && node3isOn)
 		{
+			con2.query("START TRANSACTION", function (err5, data, fields) {
+			});
 			con2.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data1, fields) {
 				if (err5) throw err5;
+			con2.query("COMMIT", function (err5, data, fields) {
+			});
 
+				con3.query("START TRANSACTION", function (err5, data, fields) {
+				});
 				con3.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data2, fields) {
 					if (err5) throw err5;
 
@@ -361,9 +371,10 @@ const controller = {
 					data = sorItemstop10(data);
 					res.render('Home', {data});
 				});
+				con3.query("COMMIT", function (err5, data, fields) {
+				});
 			});
 		}
-
 	}
 
 }
