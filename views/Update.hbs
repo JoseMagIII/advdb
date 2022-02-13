@@ -8,10 +8,10 @@
     <body>
         <h1>Update Record</h1>
         <form method="get" action="/updateRecord">
-            <p>ID #: <input name = "idNum" input type="text" id = "idNumber"  value = "{{idNum}}" required> </p>
-            <p>Name: <input name = "name" input type="text" id = "name" value = "{{name}}" required> </p>
-            <p>Year: <input name = "year" input type="text" id = "year" value = "{{year}}" required> </p>
-            <p>Rank: <input name = "rank" input type="text" id = "rank" value = "{{rank}}" required> </p>
+            <p>ID #: <input name = "idNum" type="text" id = "idNumber" value = "{{idNum}}" readonly > </p>
+            <p>Name: <input name = "name" type="text" id = "name" value = "{{name}}" required> </p>
+            <p>Year: <input name = "year" type="text" id = "year" value = "{{year}}" required> </p>
+            <p>Rank: <input name = "rank" type="text" id = "rank" value = "{{rank}}"> </p>
             <input type="submit" id="btnUpdate" value="Update">
         </form>        
     </body>

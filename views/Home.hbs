@@ -47,13 +47,13 @@
                   </button>
               </td>
               <td>
-                  <form action="/searchMovie" method="get">
-                      <input name = "id"   type="text" id = "txtSearch" class="search"  hidden value = {{id}}>
-                      <input name = "name" type="text" id = "txtSearch" class="search"  hidden value = {{name}}>
-                      <input name = "year" type="text" id = "txtSearch" class="search"  hidden value = {{year}}>
-                      <input name = "rank" type="text" id = "txtSearch" class="search"  hidden value = {{rank}}>
-                      <input type="submit" id="btnSearch" value="Update" class="btnSearch">
-                  </form>
+                <form action="/update" method="get">
+                      <input name = "id"    id = "id" class="search"  hidden value = "{{id}}">
+                      <input name = "movie" id = "name" class="search"  hidden value = "{{name}}">
+                      <input name = "year"  id = "year" class="search"  hidden value = "{{year}}">
+                      <input name = "rank"  id = "rank" class="search"  hidden value = "{{rank}}">
+                      <input type="submit" id="btnUpdate" value="Update" class="btnUpdate">
+                </form>
               </td>
           </tr>
           {{/each}}

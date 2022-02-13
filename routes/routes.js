@@ -9,9 +9,10 @@ const app = express();
 
 app.get('/', Controller.getIndex);
 app.get('/rowDelete', Controller.rowDelete);
-//app.get('/rowUpdate', Controller.rowUpdate);
+
 
 app.get("/update", Controller.viewUpdatePage);
+app.get('/updateRecord', Controller.updateRecord);
 app.get("/insert", Controller.viewInsertPage);
 app.get("/insertRecord", Controller.insertRecord);
 app.get("/getNode", Controller.getNode);

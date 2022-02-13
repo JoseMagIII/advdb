@@ -650,10 +650,10 @@ const controller = {
 	},
 
 	viewUpdatePage: function (req, res) {
-		let idNum = req.query.ID;
-		let movieName = req.query.rowNAME;
-		let year = req.query.rowYEAR;
-		let rank = req.query.rowRANK;
+		let idNum = req.param("id");
+		let movieName = req.param("movie");
+		let year = req.param("year");
+		let rank = req.param("rank");
 		let details = {};
 
 		details.idNum = idNum;
@@ -668,12 +668,134 @@ const controller = {
 		//Get variables
 		let details = {};
 		let idNum = req.query.idNum;
-		let movieName = req.query.movieName;
+		let movieName = req.query.name;
 		let year = req.query.year;
 		let rank = req.query.rank;
+		if (rank == '') {
+			rank = "NULL";
+		}
 		let yearnum = parseInt(year);
-		let query = "UPDATE movies SET name = " + movieName + ", " + "year = " + year + ", " + 
-					"rank = " + rank + "WHERE id = " + id + ";";
+		let query = "UPDATE movies SET name = '" + movieName + "', " + "year = " + year + ", " + 
+					"`rank` = " + rank + " WHERE id = " + idNum + ";";
+
+
+
+		// If node 1 is online load from node 1
+		if (node1isOn) {
+			con1.query("START TRANSACTION", function (err5, data, fields) {
+			});
+			con1.query(query, function (err5, result) {
+				if (err5) throw err5;
+
+				console.log("Updated record with " + idNum + " to " + movieName + ", " + year + ", " + rank);
+			});
+			con1.query("COMMIT", function (err5, data, fields) {
+			});
+
+			if(node2isOn && yearnum < 1980)
+			{
+				con2.query("START TRANSACTION", function (err5, data, fields) {
+				});
+				con2.query(query, function (err3, result) {
+					if (err3) throw err3;
+
+					console.log("Updated record with " + idNum + " to " + movieName + ", " + year + ", " + rank);
+				});
+				con2.query("COMMIT", function (err5, data, fields) {
+				});
+			}
+
+			// ELSE ADD TO TRANSACTIONS TABLE
+			else
+			if(!node2isOn && yearnum < 1980)
+			{
+				con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node2\")", function (err5, result) {
+				});
+				con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node2\")", function (err5, result) {
+				});
+				con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node2\")", function (err5, result) {
+				});
+			}
+
+
+			if(node3isOn && yearnum >= 1980)
+			{
+				con3.query("START TRANSACTION", function (err5, data, fields) {
+				});
+				con3.query(query, function (err, result) {
+					if (err) throw err;
+
+					console.log("Updated record with " + idNum + " to " + movieName + ", " + year + ", " + rank);
+				});
+				con3.query("COMMIT", function (err5, data, fields) {
+				});
+			}
+
+			// ELSE ADD TO TRANSACTIONS TABLE
+			else
+			if(!node3isOn && yearnum >= 1980)
+			{
+				con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node3\")", function (err5, result) {
+				});
+				con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node3\")", function (err5, result) {
+				});
+				con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node3\")", function (err5, result) {
+				});
+			}
+		}
+
+	else if (node2isOn && node3isOn){
+
+			if(yearnum < 1980)
+			{
+				con2.query("START TRANSACTION", function (err5, data, fields) {
+				});
+				con2.query(query, function (err3, result) {
+					if (err3) throw err3;
+
+					console.log("Updated record with " + idNum + " to " + movieName + ", " + year + ", " + rank);
+				});
+				con2.query("COMMIT", function (err5, data, fields) {
+				});
+
+				con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node1\")", function (err5, result) {
+				});
+				con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node1\")", function (err5, result) {
+				});
+				con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node1\")", function (err5, result) {
+				});
+			}
+
+			else
+			if(yearnum >= 1980)
+			{
+				con3.query("START TRANSACTION", function (err5, data, fields) {
+				});
+				con3.query(query, function (err, result) {
+					if (err) throw err;
+
+					console.log("Updated record with " + idNum + " to " + movieName + ", " + year + ", " + rank);
+				});
+				con3.query("COMMIT", function (err5, data, fields) {
+				});
+
+				con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node1\")", function (err5, result) {
+				});
+				con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node1\")", function (err5, result) {
+				});
+				con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node1\")", function (err5, result) {
+				});
+			}
+
+		}
+
+		details.idNum = idNum;
+		details.name = movieName;
+		details.year = year;
+		details.rank = rank;
+		console.log("NAME: " + movieName + " " + details.name);
+
+		res.render('updateSuccess', details);
 	}
 
 }
