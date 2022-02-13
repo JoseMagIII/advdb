@@ -28,6 +28,29 @@ var node3isOn = true;
 
 var offset = 0;
 
+function checknode1(err){
+	if (err)
+		node1isOn = false;
+
+	else
+		node1isOn = true;
+}
+
+function checknode2(err){
+	if (err)
+		node2isOn = false;
+
+	else
+		node2isOn = true;
+}
+function checknode3(err){
+	if (err)
+		node3isOn = false;
+
+	else
+		node3isOn = true;
+}
+
 // Check node connections
 con1.connect(function (err) {
 	if (err)
@@ -75,6 +98,7 @@ function sorItemstop10(array) {
 	return array.splice(0, 10);
 }
 
+
 const controller = {
 
 
@@ -109,13 +133,17 @@ const controller = {
 						if(node2isOn)
 						{
 							con2.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+								checknode2(err5);
 
 								data.forEach(function(ROW) {
 									con1.query(ROW.QUERY, function (err5, data, fields) {
-										if (err5) throw err5;
+										checknode1(err5);
 									});
 								});
+
+								if(node2isOn)
 								con2.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+									checknode2(err5);
 								});
 							});
 						}
@@ -123,13 +151,18 @@ const controller = {
 						// Recover from node 3
 						if(node3isOn)
 						{
+
 							con3.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+								checknode3(err5);
+
 								data.forEach(function(ROW) {
 									con1.query(ROW.QUERY, function (err5, data, fields) {
-										if (err5) throw err5;
+										checknode1(err5);
 									});
 								});
+								if(node1isOn)
 								con3.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+									checknode3(err5);
 								});
 							});
 						}
@@ -137,51 +170,66 @@ const controller = {
 						if(node2isOn && node3isOn)
 						{
 							con1.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+								checknode1(err5);
+
 								data.forEach(function(ROW) {
 
-									if(ROW.NODE = "node2")
+
+									if(ROW.NODE == "node2")
 									con2.query(ROW.QUERY, function (err5, data, fields) {
-										if (err5) throw err5;
+										checknode2(err5);
 									});
 
 									else
 									con3.query(ROW.QUERY, function (err5, data, fields) {
-										if (err5) throw err5;
+										checknode3(err5);
 									});
 								});
 
-
+								if(node1isOn)
 								con1.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
 								});
 							});
 						}
 
-						con1.query("START TRANSACTION", function (err5, data, fields) {
-						});
-						con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
-							if (err5) throw err5;
-							res.render('Home', {data});
-						});
-						con1.query("COMMIT", function (err5, data, fields) {
-						});
+						if(node1isOn) {
+							con1.query("START TRANSACTION", function (err5, data, fields) {
+								checknode1(err5);
+							});
+							if(node1isOn)
+							con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
+								checknode1(err5);
+								res.render('Home', {data});
+							});
+							con1.query("COMMIT", function (err5, data, fields) {
+								checknode1(err5);
+							});
+						}
 					}
 
+
 					// If node 2 and 3 are online load from node 2 and 3
-					else if (node2isOn && node3isOn) {
+					if (!node1isOn && node2isOn && node3isOn) {
 
 						con2.query("START TRANSACTION", function (err5, data, fields) {
+							checknode2(err5);
 						});
-						con2.query("SELECT * FROM movies LIMIT 200", function (err3, data2, fields) {
-							if (err3) throw err3;
 
-							else {
-								con2.query("COMMIT", function (err5, data, fields) {
-								});
+						con2.query("SELECT * FROM movies LIMIT 100", function (err3, data2, fields) {
+							checknode2(err3);
+
+						con2.query("COMMIT", function (err5, data, fields) {
+							checknode2(err5);
+						});
+
+							if(node2isOn) {
 
 								con3.query("START TRANSACTION", function (err5, data, fields) {
+									checknode3(err5);
 								});
-								con3.query("SELECT * FROM movies LIMIT 200", function (err4, data3, fields) {
-									if (err4) throw err4;
+								if(node3isOn)
+								con3.query("SELECT * FROM movies LIMIT 100", function (err4, data3, fields) {
+									checknode3(err4);
 
 									data = [];
 									data = data.concat(data3, data2);
@@ -190,13 +238,14 @@ const controller = {
 									res.render('Home', {data});
 								});
 								con3.query("COMMIT", function (err5, data, fields) {
+									checknode3(err5);
 								});
 							}
 						});
 					}
 
 					// else Render error screen
-					else
+					if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
 						res.render('Home');
 
 	},
@@ -208,32 +257,39 @@ const controller = {
 		if (node1isOn) {
 
 			con1.query("START TRANSACTION", function (err5, data, fields) {
+				checknode1(err5);
 			});
+			if(node1isOn)
 			con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
-				if (err5) throw err5;
+				checknode1(err5);
 				res.render('Home', {data});
 			});
 			con1.query("COMMIT", function (err5, data, fields) {
+				checknode1(err5);
 			});
 		}
 
 		// If node 2 and 3 are online load from node 2 and 3
-		else if (node2isOn && node3isOn) {
+		 if (!node1isOn && node2isOn && node3isOn) {
 			offsethere = offset/2
 
 			con2.query("START TRANSACTION", function (err5, data, fields) {
+				checknode2(err5);
 			});
 			con2.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err3, data2, fields) {
-				if (err3) throw err3;
+				checknode2(err3);
 
-				else {
-					con2.query("COMMIT", function (err5, data, fields) {
-					});
+			con2.query("COMMIT", function (err5, data, fields) {
+			});
+
+				if(node2isOn) {
 
 					con3.query("START TRANSACTION", function (err5, data, fields) {
+						checknode3(err5);
 					});
+					if(node3isOn)
 					con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
-						if (err4) throw err4;
+						checknode3(err4);
 
 						data = [];
 						data = data.concat(data3, data2);
@@ -242,13 +298,14 @@ const controller = {
 						res.render('Home', {data});
 					});
 					con3.query("COMMIT", function (err5, data, fields) {
+						checknode3(err5);
 					});
 				}
 			});
 		}
 
 		// else Render error screen
-		else
+		if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
 			res.render('Home');
 	},
 
@@ -262,46 +319,55 @@ const controller = {
 		if (node1isOn) {
 
 			con1.query("START TRANSACTION", function (err5, data, fields) {
+				checknode1(err5);
 			});
-			con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
-				if (err5) throw err5;
-				res.render('Home', {data});
-			});
+			if(node1isOn)
+				con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
+					checknode1(err5);
+					res.render('Home', {data});
+				});
 			con1.query("COMMIT", function (err5, data, fields) {
+				checknode1(err5);
 			});
 		}
 
 		// If node 2 and 3 are online load from node 2 and 3
-		else if (node2isOn && node3isOn) {
+		if (!node1isOn && node2isOn && node3isOn) {
 			offsethere = offset/2
+
 			con2.query("START TRANSACTION", function (err5, data, fields) {
+				checknode2(err5);
 			});
 			con2.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err3, data2, fields) {
-				if (err3) throw err3;
+				checknode2(err3);
 
-				else {
-					con2.query("COMMIT", function (err5, data, fields) {
-					});
+				con2.query("COMMIT", function (err5, data, fields) {
+				});
+
+				if(node2isOn) {
 
 					con3.query("START TRANSACTION", function (err5, data, fields) {
+						checknode3(err5);
 					});
-					con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
-						if (err4) throw err4;
+					if(node3isOn)
+						con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
+							checknode3(err4);
 
-						data = [];
-						data = data.concat(data3, data2);
-						// D KO ALAM PANO ISORT YUNG DATA
-						data = sortItems(data)
-						res.render('Home', {data});
-					});
+							data = [];
+							data = data.concat(data3, data2);
+							// D KO ALAM PANO ISORT YUNG DATA
+							data = sortItems(data)
+							res.render('Home', {data});
+						});
 					con3.query("COMMIT", function (err5, data, fields) {
+						checknode3(err5);
 					});
 				}
 			});
 		}
 
 		// else Render error screen
-		else
+		if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
 			res.render('Home');
 	},
 
@@ -316,26 +382,45 @@ const controller = {
 					// If node 1 is online load from node 1
 					if (node1isOn) {
 						con1.query("START TRANSACTION", function (err5, data, fields) {
+							checknode1(err5);
 						});
+
+						if(node1isOn)
 						con1.query(query, function (err5, result) {
-							if (err5) throw err5;
+							checknode1(err5);
 
 							console.log("Number of records deleted: " + result.affectedRows);
 						});
 						con1.query("COMMIT", function (err5, data, fields) {
+							checknode1(err5);
 						});
 
 						if(node2isOn && yearnum < 1980)
 						{
 							con2.query("START TRANSACTION", function (err5, data, fields) {
+								checknode2(err5);
 							});
+
+							if(node2isOn)
 							con2.query(query, function (err3, result) {
-								if (err3) throw err3;
+								checknode2(err3);
 
 								console.log("Number of records deleted: " + result.affectedRows);
 							});
 							con2.query("COMMIT", function (err5, data, fields) {
+								checknode2(err5);
 							});
+
+							// Add to recovery if node2 becomes offline
+							if(!node2isOn)
+							{
+								con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node2\")", function (err5, result) {
+								});
+								con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node2\")", function (err5, result) {
+								});
+								con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node2\")", function (err5, result) {
+								});
+							}
 						}
 
 						// ELSE ADD TO TRANSACTIONS TABLE
@@ -354,14 +439,27 @@ const controller = {
 						if(node3isOn && yearnum >= 1980)
 						{
 							con3.query("START TRANSACTION", function (err5, data, fields) {
+								checknode3(err5);
 							});
+							if(node3isOn)
 							con3.query(query, function (err, result) {
-								if (err) throw err;
+								checknode3(err);
 
 								console.log("Number of records deleted: " + result.affectedRows);
 							});
 							con3.query("COMMIT", function (err5, data, fields) {
+								checknode3(err5);
 							});
+
+							if(!node3isOn)
+							{
+								con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node3\")", function (err5, result) {
+								});
+								con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"" + query + "\", \"node3\")", function (err5, result) {
+								});
+								con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node3\")", function (err5, result) {
+								});
+							}
 						}
 
 						// ELSE ADD TO TRANSACTIONS TABLE
@@ -382,13 +480,15 @@ const controller = {
 						if(yearnum < 1980)
 						{
 							con2.query("START TRANSACTION", function (err5, data, fields) {
+								checknode2(err5);
 							});
 							con2.query(query, function (err3, result) {
-								if (err3) throw err3;
+								checknode2(err3);
 
 								console.log("Number of records deleted: " + result.affectedRows);
 							});
 							con2.query("COMMIT", function (err5, data, fields) {
+								checknode2(err5);
 							});
 
 							con2.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node1\")", function (err5, result) {
@@ -403,13 +503,15 @@ const controller = {
 						if(yearnum >= 1980)
 						{
 							con3.query("START TRANSACTION", function (err5, data, fields) {
+								checknode3(err5);
 							});
 							con3.query(query, function (err, result) {
-								if (err) throw err;
+								checknode3(err);
 
 								console.log("Number of records deleted: " + result.affectedRows);
 							});
 							con3.query("COMMIT", function (err5, data, fields) {
+								checknode3(err5);
 							});
 
 							con3.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node1\")", function (err5, result) {
@@ -698,6 +800,7 @@ const controller = {
 		let rank = req.param("rank");
 		let details = {};
 
+		console.log(movieName);
 		details.idNum = idNum;
 		details.name = movieName;
 		details.year = year;
