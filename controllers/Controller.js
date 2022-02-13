@@ -434,22 +434,27 @@ const controller = {
 	insertRecord: function (req, res) {
 		//Get variables
 		var details = {};
-		let idNum = req.query.idNum;
+		let idNum = 0;
 		let movieName = req.query.movieName;
 		let year = req.query.year;
 		let rank = req.query.rank;
 		let yearnum = parseInt(year);
-		let query = "INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');"
-
+		let query = "";
 
 					// If node 1 is online load from node 1
 					if (node1isOn) {
+						//generate id number
 						con1.query("START TRANSACTION", function (err5, data, fields) {
 						});
-						con1.query(query, function (err5, result) {
+						con1.query("SELECT (MAX(id)+1) as id FROM movies;", function (err5, data, fields) {
 							if (err5) throw err5;
+							idNum = data[0].id;
+							query = "INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');";
+						
+						//insert new record to node 1
+						con1.query(query, function (err5, result) {
 
-							console.log("New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
+							console.log("1 New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
 						});
 						con1.query("COMMIT", function (err5, data, fields) {
 						});
@@ -459,9 +464,8 @@ const controller = {
 							con2.query("START TRANSACTION", function (err5, data, fields) {
 							});
 							con2.query(query, function (err3, result) {
-								if (err3) throw err3;
 
-								console.log("New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
+								console.log("2 New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
 							});
 							con2.query("COMMIT", function (err5, data, fields) {
 							});
@@ -485,15 +489,14 @@ const controller = {
 							con3.query("START TRANSACTION", function (err5, data, fields) {
 							});
 							con3.query(query, function (err, result) {
-								if (err) throw err;
 
-								console.log("New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
+								console.log("3 New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
 							});
 							con3.query("COMMIT", function (err5, data, fields) {
 							});
 						}
 
-						// ELSE ADD TO TRANSACTIONS TABLE
+						// ELSE ADD TO RECOVERY TABLE
 						else
 						if(!node3isOn && yearnum >= 1980)
 						{
@@ -504,18 +507,53 @@ const controller = {
 							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"COMMIT\", \"node3\")", function (err5, result) {
 							});
 						}
+
+						details.idNum = idNum;
+						details.movieName = movieName;
+						details.year = year;
+						details.rank = rank;
+						res.render('insertSuccess', details);
+					});
 					}
 
-				else if (node2isOn && node3isOn){
 
+				//executes if node1 is offline
+				else if (node2isOn && node3isOn){
+					//generate highest id number from node 2
+					con2.query("START TRANSACTION", function (err5, data, fields) {
+					});
+					con2.query("SELECT (MAX(id)+1) as id FROM movies;", function (err5, data, fields) {
+						if (err5) throw err5;
+							let idNum2 = data[0].id;
+							//let query = "INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');";
+					con2.query("COMMIT", function (err5, data, fields) {
+					});
+
+					//generate highest id number from node 3
+					con3.query("START TRANSACTION", function (err5, data, fields) {
+					});
+					con3.query("SELECT (MAX(id)+1) as id FROM movies;", function (err5, data, fields) {
+						if (err5) throw err5;
+							let idNum3 = data[0].id;
+							//let query = "INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');";
+					con3.query("COMMIT", function (err5, data, fields) {
+					});
+
+					//compare which has the higher id number from nodes 2 and 3
+					if(parseInt(idNum2) > parseInt(idNum3))
+						idNum = idNum2;
+					else
+						idNum = idNum3
+					
+					query = "INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');";
+
+						//insert new record to node 2 if year is below 1980
 						if(yearnum < 1980)
 						{
 							con2.query("START TRANSACTION", function (err5, data, fields) {
 							});
-							con2.query(query, function (err3, result) {
-								if (err3) throw err3;
-
-								console.log("New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
+							con2.query("INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');", function (err3, result) {
+								console.log("4 New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
 							});
 							con2.query("COMMIT", function (err5, data, fields) {
 							});
@@ -528,15 +566,14 @@ const controller = {
 							});
 						}
 
+						//insert new record to node 3 if year is equal or greater than 1980
 						else
 						if(yearnum >= 1980)
 						{
 							con3.query("START TRANSACTION", function (err5, data, fields) {
 							});
-							con3.query(query, function (err, result) {
-								if (err) throw err;
-
-								console.log("New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
+							con3.query("INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');", function (err, result) {
+								console.log("5 New record added! " + idNum + ", " + movieName + ", " + year + ", " + rank);
 							});
 							con3.query("COMMIT", function (err5, data, fields) {
 							});
@@ -549,9 +586,14 @@ const controller = {
 							});
 						}
 
+						details.idNum = idNum;
+						details.movieName = movieName;
+						details.year = year;
+						details.rank = rank;
+						res.render('insertSuccess', details);
+					}); // end 2
+					}); // end 3
 					}
-
-					res.render('insertSuccess', details);
 	},
 
 	getNode: function(req, res){
