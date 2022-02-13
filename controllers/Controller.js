@@ -647,6 +647,33 @@ const controller = {
 				});
 			});
 		}
+	},
+
+	viewUpdatePage: function (req, res) {
+		let idNum = req.query.ID;
+		let movieName = req.query.rowNAME;
+		let year = req.query.rowYEAR;
+		let rank = req.query.rowRANK;
+		let details = {};
+
+		details.idNum = idNum;
+		details.name = movieName;
+		details.year = year;
+		details.rank = rank;
+
+		res.render('Update', details);
+	},
+
+	updateRecord: function (req, res) {
+		//Get variables
+		let details = {};
+		let idNum = req.query.idNum;
+		let movieName = req.query.movieName;
+		let year = req.query.year;
+		let rank = req.query.rank;
+		let yearnum = parseInt(year);
+		let query = "UPDATE movies SET name = " + movieName + ", " + "year = " + year + ", " + 
+					"rank = " + rank + "WHERE id = " + id + ";";
 	}
 
 }
