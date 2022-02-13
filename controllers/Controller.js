@@ -616,11 +616,34 @@ const controller = {
 
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 			});
-			con1.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\" LIMIT 100;", function (err5, data, fields) {
+			con1.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data, fields) {
 				if (err5) throw err5;
 
 				res.render('Home', {data});
 				con1.query("COMMIT", function (err5, data, fields) {
+				});
+			});
+		}
+
+		else if(node2isOn && node3isOn){
+			con2.query("START TRANSACTION", function (err5, data, fields) {
+			});
+			con2.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data1, fields) {
+				if (err5) throw err5;
+				con2.query("COMMIT", function (err5, data, fields) {
+				});
+
+				con3.query("START TRANSACTION", function (err5, data, fields) {
+				});
+				con3.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data2, fields) {
+					if (err5) throw err5;
+
+					data = [];
+					data = data.concat(data1, data2);
+
+					res.render('Home', {data});
+				});
+				con3.query("COMMIT", function (err5, data, fields) {
 				});
 			});
 		}
