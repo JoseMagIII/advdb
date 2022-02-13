@@ -47,17 +47,14 @@
                   </button>
               </td>
               <td>
-                  <a href="/update">
-                      <button class = "toUpdate">
-                          <p id = "rowId" hidden>{{id}}</p>
-                          <p id = "rowName" hidden>{{name}}</p>
-                          <p id = "rowYear" hidden>{{year}}</p>
-                          <p id = "rowRank" hidden>{{rank}}</p>
-                          UPDATE
-                      </button>
-                  </a>
+                  <form action="/searchMovie" method="get">
+                      <input name = "id"   type="text" id = "txtSearch" class="search"  hidden value = {{id}}>
+                      <input name = "name" type="text" id = "txtSearch" class="search"  hidden value = {{name}}>
+                      <input name = "year" type="text" id = "txtSearch" class="search"  hidden value = {{year}}>
+                      <input name = "rank" type="text" id = "txtSearch" class="search"  hidden value = {{rank}}>
+                      <input type="submit" id="btnSearch" value="Update" class="btnSearch">
+                  </form>
               </td>
-
           </tr>
           {{/each}}
 
