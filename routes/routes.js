@@ -11,7 +11,7 @@ app.get('/', Controller.getIndex);
 app.get('/rowDelete', Controller.rowDelete);
 //app.get('/rowUpdate', Controller.rowUpdate);
 
-//app.get("/update", Controller.viewUpdatePage);
+app.get("/update", Controller.viewUpdatePage);
 app.get("/insert", Controller.viewInsertPage);
 app.get("/insertRecord", Controller.insertRecord);
 app.get("/getNode", Controller.getNode);

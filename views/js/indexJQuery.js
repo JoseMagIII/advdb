@@ -16,7 +16,7 @@ $(document).ready(function () {
         let rowYEAR = year.text()
 
         $(this).parent().parent().remove();
-        $.get('/rowDelete', {ID: ID, rowYEAR: rowYEAR}, function (result) {
+       $.get('/rowDelete', {ID: ID, rowYEAR: rowYEAR}, function (result) {
         });
     });
 
@@ -32,4 +32,18 @@ $(document).ready(function () {
         });
     });
     **/
+
+    $(".toUpdate").on('click', function () {
+        let id = $(this).children("#rowId");
+        let name = $(this).children("#rowName");
+        let year = $(this).children("#rowYear");
+        let rank = $(this).children("#rowRank");
+        let ID = id.text()
+        let rowNAME = name.text()
+        let rowYEAR = year.text()
+        let rowRANK = rank.text()
+
+        $.get('/update', {ID: ID, rowNAME: rowNAME, rowYEAR: rowYEAR, rowRANK: rowRANK}, function (result) {
+        });
+    })
 });
