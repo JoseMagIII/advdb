@@ -23,8 +23,8 @@ const con3 = mysql.createConnection({
 });
 
 var node1isOn = true;
-var node2isOn = false;
-var node3isOn = false;
+var node2isOn = true;
+var node3isOn = true;
 
 var offset = 0;
 
@@ -168,13 +168,14 @@ const controller = {
 							con1.query("START TRANSACTION", function (err5, data, fields) {
 
 							});
-							// Delay
-							con1.query("DO SLEEP(2)", function (err5, data, fields) {
-							});
+
 							if(node1isOn)
 							con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
 
 								res.render('Home', {data});
+							});
+							// Delay
+							con1.query("DO SLEEP(2)", function (err5, data, fields) {
 							});
 							con1.query("COMMIT", function (err5, data, fields) {
 
@@ -190,26 +191,24 @@ const controller = {
 
 						});
 						// Delay
-						con2.query("DO SLEEP(2)", function (err5, data, fields) {
-						});
+
 						con2.query("SELECT * FROM movies LIMIT 100", function (err3, data2, fields) {
 
-
 						con2.query("COMMIT", function (err5, data, fields) {
-
+						});
+						con2.query("DO SLEEP(2)", function (err5, data, fields) {
 						});
 
 							if(node2isOn) {
 
 								con3.query("START TRANSACTION", function (err5, data, fields) {
-									// Delay
-									con3.query("DO SLEEP(2)", function (err5, data, fields) {
-									});
+
 								});
 								if(node3isOn)
 								con3.query("SELECT * FROM movies LIMIT 100", function (err4, data3, fields) {
-
-
+								// Delay
+								con3.query("DO SLEEP(2)", function (err5, data, fields) {
+								});
 									data = [];
 									data = data.concat(data3, data2);
 									// D KO ALAM PANO ISORT YUNG DATA
@@ -238,14 +237,16 @@ const controller = {
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 
 			});
-			// Delay
-			con1.query("DO SLEEP(2)", function (err5, data, fields) {
-			});
+
 
 			if(node1isOn)
 			con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
 
 				res.render('Home', {data});
+			});
+
+			// Delay
+			con1.query("DO SLEEP(2)", function (err5, data, fields) {
 			});
 			con1.query("COMMIT", function (err5, data, fields) {
 
@@ -259,12 +260,12 @@ const controller = {
 			con2.query("START TRANSACTION", function (err5, data, fields) {
 
 			});
-			 // Delay
-			 con2.query("DO SLEEP(2)", function (err5, data, fields) {
-			 });
+
 			con2.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err3, data2, fields) {
 
-
+			// Delay
+			con2.query("DO SLEEP(2)", function (err5, data, fields) {
+			});
 			con2.query("COMMIT", function (err5, data, fields) {
 			});
 
@@ -273,9 +274,7 @@ const controller = {
 					con3.query("START TRANSACTION", function (err5, data, fields) {
 
 					});
-					// Delay
-					con3.query("DO SLEEP(2)", function (err5, data, fields) {
-					});
+
 					if(node3isOn)
 					con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
 
@@ -285,6 +284,9 @@ const controller = {
 						// D KO ALAM PANO ISORT YUNG DATA
 						data = sortItems(data)
 						res.render('Home', {data});
+					});
+					// Delay
+					con3.query("DO SLEEP(2)", function (err5, data, fields) {
 					});
 					con3.query("COMMIT", function (err5, data, fields) {
 
@@ -311,13 +313,14 @@ const controller = {
 
 			});
 			// Delay
-			con1.query("DO SLEEP(2)", function (err5, data, fields) {
-			});
+
 			if(node1isOn)
 				con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
 
 					res.render('Home', {data});
 				});
+			con1.query("DO SLEEP(2)", function (err5, data, fields) {
+			});
 			con1.query("COMMIT", function (err5, data, fields) {
 
 			});
@@ -330,11 +333,12 @@ const controller = {
 			con2.query("START TRANSACTION", function (err5, data, fields) {
 
 			});
-			// Delay
-			con2.query("DO SLEEP(2)", function (err5, data, fields) {
-			});
+
 			con2.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err3, data2, fields) {
 
+				// Delay
+				con2.query("DO SLEEP(2)", function (err5, data, fields) {
+				});
 
 				con2.query("COMMIT", function (err5, data, fields) {
 				});
@@ -344,9 +348,7 @@ const controller = {
 					con3.query("START TRANSACTION", function (err5, data, fields) {
 
 					});
-					// Delay
-					con3.query("DO SLEEP(2)", function (err5, data, fields) {
-					});
+
 					if(node3isOn)
 						con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
 
@@ -357,6 +359,9 @@ const controller = {
 							data = sortItems(data)
 							res.render('Home', {data});
 						});
+					// Delay
+					con3.query("DO SLEEP(2)", function (err5, data, fields) {
+					});
 					con3.query("COMMIT", function (err5, data, fields) {
 
 					});
@@ -554,14 +559,15 @@ const controller = {
 						//generate id number
 						con1.query("START TRANSACTION", function (err5, data, fields) {
 						});
-						// Delay
-						con1.query("DO SLEEP(2)", function (err5, data, fields) {
-						});
+
 						con1.query("SELECT (MAX(id)+1) as id FROM movies;", function (err5, data, fields) {
 							if (err5) throw err5;
 							idNum = data[0].id;
 							query = "INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');";
-						
+
+							// Delay
+							con1.query("DO SLEEP(2)", function (err5, data, fields) {
+							});
 						//insert new record to node 1
 						con1.query(query, function (err5, result) {
 
@@ -631,26 +637,30 @@ const controller = {
 					//generate highest id number from node 2
 					con2.query("START TRANSACTION", function (err5, data, fields) {
 					});
-						// Delay
-						con2.query("DO SLEEP(2)", function (err5, data, fields) {
-						});
+
 					con2.query("SELECT (MAX(id)+1) as id FROM movies;", function (err5, data, fields) {
 						if (err5) throw err5;
 							let idNum2 = data[0].id;
 							//let query = "INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');";
+
+						// Delay
+						con2.query("DO SLEEP(2)", function (err5, data, fields) {
+						});
 					con2.query("COMMIT", function (err5, data, fields) {
 					});
 
 					//generate highest id number from node 3
 					con3.query("START TRANSACTION", function (err5, data, fields) {
 					});
-						// Delay
-						con3.query("DO SLEEP(2)", function (err5, data, fields) {
-						});
+
 					con3.query("SELECT (MAX(id)+1) as id FROM movies;", function (err5, data, fields) {
 						if (err5) throw err5;
 							let idNum3 = data[0].id;
 							//let query = "INSERT INTO movies VALUES ('" + idNum + "', '" + movieName + "', '" + year + "', '" + rank + "');";
+
+						// Delay
+						con3.query("DO SLEEP(2)", function (err5, data, fields) {
+						});
 					con3.query("COMMIT", function (err5, data, fields) {
 					});
 
@@ -725,11 +735,12 @@ const controller = {
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 			});
 			// Delay
-			con1.query("DO SLEEP(2)", function (err5, data, fields) {
-			});
+
 			con1.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data, fields) {
 				if (err5) throw err5;
 
+				con1.query("DO SLEEP(2)", function (err5, data, fields) {
+				});
 				res.render('Home', {data});
 			con1.query("COMMIT", function (err5, data, fields) {
 			});
@@ -742,11 +753,13 @@ const controller = {
 		{
 			con2.query("START TRANSACTION", function (err5, data, fields) {
 			});
-			// Delay
-			con2.query("DO SLEEP(2)", function (err5, data, fields) {
-			});
+
 			con2.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data1, fields) {
 				if (err5) throw err5;
+
+				// Delay
+				con2.query("DO SLEEP(2)", function (err5, data, fields) {
+				});
 			con2.query("COMMIT", function (err5, data, fields) {
 			});
 
@@ -782,12 +795,13 @@ const controller = {
 
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 			});
-			// Delay
-			con1.query("DO SLEEP(2)", function (err5, data, fields) {
-			});
+
 			con1.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data, fields) {
 				if (err5) throw err5;
 
+				// Delay
+				con1.query("DO SLEEP(2)", function (err5, data, fields) {
+				});
 				res.render('Home', {data});
 				con1.query("COMMIT", function (err5, data, fields) {
 				});
@@ -797,21 +811,25 @@ const controller = {
 		else if(node2isOn && node3isOn){
 			con2.query("START TRANSACTION", function (err5, data, fields) {
 			});
-			// Delay
-			con2.query("DO SLEEP(2)", function (err5, data, fields) {
-			});
+
 			con2.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data1, fields) {
 				if (err5) throw err5;
+
+				// Delay
+				con2.query("DO SLEEP(2)", function (err5, data, fields) {
+				});
 				con2.query("COMMIT", function (err5, data, fields) {
 				});
 
 				con3.query("START TRANSACTION", function (err5, data, fields) {
 				});
-				// Delay
-				con3.query("DO SLEEP(2)", function (err5, data, fields) {
-				});
+
 				con3.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data2, fields) {
 					if (err5) throw err5;
+
+					// Delay
+					con3.query("DO SLEEP(2)", function (err5, data, fields) {
+					});
 
 					data = [];
 					data = data.concat(data1, data2);
