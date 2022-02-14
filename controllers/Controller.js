@@ -428,6 +428,7 @@ const controller = {
 
 							});
 
+							// Add to recovery if node3 becomes offline
 							if(!node3isOn)
 							{
 								con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node3\")", function (err5, result) {
@@ -558,7 +559,6 @@ const controller = {
 						}
 
 						// ELSE ADD TO TRANSACTIONS TABLE
-						else
 						if(!node2isOn && yearnum < 1980)
 						{
 							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node2\")", function (err5, result) {
@@ -583,7 +583,6 @@ const controller = {
 						}
 
 						// ELSE ADD TO RECOVERY TABLE
-						else
 						if(!node3isOn && yearnum >= 1980)
 						{
 							con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node3\")", function (err5, result) {
@@ -684,6 +683,7 @@ const controller = {
 
 				if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
 					res.render('error');
+
                 else
                     res.render('insertSuccess')
 	},
@@ -842,7 +842,6 @@ const controller = {
 			}
 
 			// ELSE ADD TO TRANSACTIONS TABLE
-			else
 			if(!node2isOn && yearnum < 1980)
 			{
 				con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node2\")", function (err5, result) {
@@ -868,7 +867,6 @@ const controller = {
 			}
 
 			// ELSE ADD TO TRANSACTIONS TABLE
-			else
 			if(!node3isOn && yearnum >= 1980)
 			{
 				con1.query("INSERT INTO RECOVERY (QUERY, NODE) VALUES (\"START TRANSACTION\",\"node3\")", function (err5, result) {
