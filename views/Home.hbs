@@ -21,6 +21,13 @@
                   </select>
               </form>
           </div>
+        <div style="position: relative; top: 20px; left: 0px">
+            <p>Click to disable node: </p>
+                <label for="node1"><input class="nodes" type="checkbox" id="node1" name="node1" value="Node1">Node 1 </label><br>
+                <label for="node2"><input class="nodes"  type="checkbox" id="node2" name="node2" value="Node2">Node 2 </label><br>
+                <label for="node3"><input class="nodes"  type="checkbox" id="node3" name="node3" value="Node3">Node 3 </label><br>
+        </div>
+
           <div style="position: relative; top: 20px; right: 50px; text-align: right;">
               <a href="/insert"><button id="btnInsert"> Insert New Record </button> </a>
               <a href="/top10"><button id="top10"> Show top 10</button> </a>
@@ -29,7 +36,7 @@
       </div>
         <br>
         <br>
-        <div style="position: relative; top: 0px; right: 50px; text-align: right;">
+        <div style="width: 500px; position: absolute; top: 100px; right: 50px; text-align: right;">
             <form action="/searchMovie" method="get">
                 <input name = "searchname" type="text" id = "txtSearch" class="search" required>
                 <input type="submit" id="btnSearch" value="Search" class="btnSearch">

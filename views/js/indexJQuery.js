@@ -2,7 +2,24 @@ $(document).ready(function () {
 
 //AJAX for like buttons
 
+    $(window).on( "load", function() {
+        $.get('/getNode', function (result) {
+            alert(result)
+        });
 
+        $.get('/getNodeStatus', function (result) {
+            if (result[0]) {
+                $('#node1').prop('checked', true);
+            }
+            if (result[1]) {
+                $('#node2').prop('checked', true);
+            }
+            if (result[2]) {
+                $('#node3').prop('checked', true);
+            }
+        });
+        console.log("LOADED");
+    });
 
 
     $(".delete").on('click', function () {
@@ -12,7 +29,7 @@ $(document).ready(function () {
         let rowYEAR = year.text()
 
         $(this).parent().parent().remove();
-       $.get('/rowDelete', {ID: ID, rowYEAR: rowYEAR}, function (result) {
+        $.get('/rowDelete', {ID: ID, rowYEAR: rowYEAR}, function (result) {
         });
     });
 
@@ -39,17 +56,14 @@ $(document).ready(function () {
         let rowYEAR = year.text()
         let rowRANK = rank.text()
 
-        $.get('/update', {ID: ID, rowNAME: rowNAME, rowYEAR: rowYEAR, rowRANK: rowRANK}, function (result) {
+        $.get('/update', {ID: ID, rowNAME: rowNAME, rowYEAR: rowYEAR, rowRANK: rowRANK}, function () {
         });
     });
 
-    $("select.isolationLevels").on('change', function () {
-        let selectedLevel = $(this).children("option:selected").text();
-
-        console.log(selectedLevel);
-        $.get('/setIsolationLevel', {selectedLevel: selectedLevel}, function (result){
-
+    $(".nodes").on('click', function () {
+        let node = $(this).parent().text().trim();
+        
+        $.get('/disableNode', {node: node}, function () {
         });
     });
-
 });

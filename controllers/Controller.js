@@ -23,8 +23,8 @@ const con3 = mysql.createConnection({
 });
 
 var node1isOn = true;
-var node2isOn = true;
-var node3isOn = true;
+var node2isOn = false;
+var node3isOn = false;
 
 var offset = 0;
 
@@ -1032,8 +1032,34 @@ const controller = {
 			res.render('error');
 		}
 
-	}
 
+	},
+
+	disableNode: function (req, res)  {
+		let node = req.query.node;
+		
+		if (node == 'Node 1') {
+			node1isOn = !node1isOn;
+		}
+		else if (node == 'Node 2') {
+			node2isOn = !node2isOn;
+		}
+		else if (node == 'Node 3') {
+			node3isOn = !node3isOn;
+		}
+
+		console.log("NODE 1: " + node1isOn + " NODE 2: " + node2isOn + " NODE 3: " + node3isOn);
+	},
+
+	getNodeStatus: function (req, res) {
+		let status = {};
+
+		status[0] = node1isOn;
+		status[1] = node2isOn;
+		status[2] = node3isOn;
+
+		res.send(status);
+	}
 }
 
 module.exports = controller;
