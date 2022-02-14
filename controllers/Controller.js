@@ -111,7 +111,6 @@ const controller = {
 						{
 							con2.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
 
-
 								data.forEach(function(ROW) {
 									con1.query(ROW.QUERY, function (err5, data, fields) {
 
@@ -128,9 +127,7 @@ const controller = {
 						// Recover from node 3
 						if(node3isOn)
 						{
-
 							con3.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
-
 
 								data.forEach(function(ROW) {
 									con1.query(ROW.QUERY, function (err5, data, fields) {
@@ -148,9 +145,7 @@ const controller = {
 						{
 							con1.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
 
-
 								data.forEach(function(ROW) {
-
 
 									if(ROW.NODE == "node2")
 									con2.query(ROW.QUERY, function (err5, data, fields) {
@@ -173,6 +168,9 @@ const controller = {
 							con1.query("START TRANSACTION", function (err5, data, fields) {
 
 							});
+							// Delay
+							con1.query("DO SLEEP(2)", function (err5, data, fields) {
+							});
 							if(node1isOn)
 							con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
 
@@ -191,7 +189,9 @@ const controller = {
 						con2.query("START TRANSACTION", function (err5, data, fields) {
 
 						});
-
+						// Delay
+						con2.query("DO SLEEP(2)", function (err5, data, fields) {
+						});
 						con2.query("SELECT * FROM movies LIMIT 100", function (err3, data2, fields) {
 
 
@@ -202,7 +202,9 @@ const controller = {
 							if(node2isOn) {
 
 								con3.query("START TRANSACTION", function (err5, data, fields) {
-
+									// Delay
+									con3.query("DO SLEEP(2)", function (err5, data, fields) {
+									});
 								});
 								if(node3isOn)
 								con3.query("SELECT * FROM movies LIMIT 100", function (err4, data3, fields) {
@@ -236,6 +238,10 @@ const controller = {
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 
 			});
+			// Delay
+			con1.query("DO SLEEP(2)", function (err5, data, fields) {
+			});
+
 			if(node1isOn)
 			con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
 
@@ -253,6 +259,9 @@ const controller = {
 			con2.query("START TRANSACTION", function (err5, data, fields) {
 
 			});
+			 // Delay
+			 con2.query("DO SLEEP(2)", function (err5, data, fields) {
+			 });
 			con2.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err3, data2, fields) {
 
 
@@ -263,6 +272,9 @@ const controller = {
 
 					con3.query("START TRANSACTION", function (err5, data, fields) {
 
+					});
+					// Delay
+					con3.query("DO SLEEP(2)", function (err5, data, fields) {
 					});
 					if(node3isOn)
 					con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
@@ -298,6 +310,9 @@ const controller = {
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 
 			});
+			// Delay
+			con1.query("DO SLEEP(2)", function (err5, data, fields) {
+			});
 			if(node1isOn)
 				con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
 
@@ -315,6 +330,9 @@ const controller = {
 			con2.query("START TRANSACTION", function (err5, data, fields) {
 
 			});
+			// Delay
+			con2.query("DO SLEEP(2)", function (err5, data, fields) {
+			});
 			con2.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err3, data2, fields) {
 
 
@@ -325,6 +343,9 @@ const controller = {
 
 					con3.query("START TRANSACTION", function (err5, data, fields) {
 
+					});
+					// Delay
+					con3.query("DO SLEEP(2)", function (err5, data, fields) {
 					});
 					if(node3isOn)
 						con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
@@ -533,6 +554,9 @@ const controller = {
 						//generate id number
 						con1.query("START TRANSACTION", function (err5, data, fields) {
 						});
+						// Delay
+						con1.query("DO SLEEP(2)", function (err5, data, fields) {
+						});
 						con1.query("SELECT (MAX(id)+1) as id FROM movies;", function (err5, data, fields) {
 							if (err5) throw err5;
 							idNum = data[0].id;
@@ -607,6 +631,9 @@ const controller = {
 					//generate highest id number from node 2
 					con2.query("START TRANSACTION", function (err5, data, fields) {
 					});
+						// Delay
+						con2.query("DO SLEEP(2)", function (err5, data, fields) {
+						});
 					con2.query("SELECT (MAX(id)+1) as id FROM movies;", function (err5, data, fields) {
 						if (err5) throw err5;
 							let idNum2 = data[0].id;
@@ -617,6 +644,9 @@ const controller = {
 					//generate highest id number from node 3
 					con3.query("START TRANSACTION", function (err5, data, fields) {
 					});
+						// Delay
+						con3.query("DO SLEEP(2)", function (err5, data, fields) {
+						});
 					con3.query("SELECT (MAX(id)+1) as id FROM movies;", function (err5, data, fields) {
 						if (err5) throw err5;
 							let idNum3 = data[0].id;
@@ -694,6 +724,9 @@ const controller = {
 		if(node1isOn) {
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 			});
+			// Delay
+			con1.query("DO SLEEP(2)", function (err5, data, fields) {
+			});
 			con1.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data, fields) {
 				if (err5) throw err5;
 
@@ -709,12 +742,18 @@ const controller = {
 		{
 			con2.query("START TRANSACTION", function (err5, data, fields) {
 			});
+			// Delay
+			con2.query("DO SLEEP(2)", function (err5, data, fields) {
+			});
 			con2.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data1, fields) {
 				if (err5) throw err5;
 			con2.query("COMMIT", function (err5, data, fields) {
 			});
 
 				con3.query("START TRANSACTION", function (err5, data, fields) {
+				});
+				// Delay
+				con3.query("DO SLEEP(2)", function (err5, data, fields) {
 				});
 				con3.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data2, fields) {
 					if (err5) throw err5;
@@ -743,6 +782,9 @@ const controller = {
 
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 			});
+			// Delay
+			con1.query("DO SLEEP(2)", function (err5, data, fields) {
+			});
 			con1.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data, fields) {
 				if (err5) throw err5;
 
@@ -755,12 +797,18 @@ const controller = {
 		else if(node2isOn && node3isOn){
 			con2.query("START TRANSACTION", function (err5, data, fields) {
 			});
+			// Delay
+			con2.query("DO SLEEP(2)", function (err5, data, fields) {
+			});
 			con2.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data1, fields) {
 				if (err5) throw err5;
 				con2.query("COMMIT", function (err5, data, fields) {
 				});
 
 				con3.query("START TRANSACTION", function (err5, data, fields) {
+				});
+				// Delay
+				con3.query("DO SLEEP(2)", function (err5, data, fields) {
 				});
 				con3.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data2, fields) {
 					if (err5) throw err5;
@@ -945,16 +993,32 @@ const controller = {
 					console.log(result);
 				});
 			});
+
+			con1.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
+				con1.query("SELECT @@transaction_ISOLATION", function (err, result){
+					console.log(result);
+				});
+			});
 		}
 		if(node2isOn && node3isOn && (iLevel != "--Select--")){
 			con2.query("SET SESSION TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
 				console.log("SET SESSION TRANSACTION ISOLATION LEVEL " + iLevel);
+			});
+			con2.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
+				con2.query("SELECT @@transaction_ISOLATION", function (err, result){
+					console.log(result);
+				});
 			});
 			con3.query("SET SESSION TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
 				console.log("SET SESSION TRANSACTION ISOLATION LEVEL " + iLevel);
 			});
 			con2.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
 				con2.query("SELECT @@transaction_ISOLATION", function (err, result){
+					console.log(result);
+				});
+			});
+			con3.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
+				con3.query("SELECT @@transaction_ISOLATION", function (err, result){
 					console.log(result);
 				});
 			});
