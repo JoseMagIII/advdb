@@ -66,4 +66,14 @@ $(document).ready(function () {
         $.get('/disableNode', {node: node}, function () {
         });
     });
+
+    $("select.isolationLevels").on('change', function () {
+        let selectedLevel = $(this).children("option:selected").text();
+
+        console.log(selectedLevel);
+        $.get('/setIsolationLevel', {selectedLevel: selectedLevel}, function (result) {
+        });
+
+        });
+
 });
