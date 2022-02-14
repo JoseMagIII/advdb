@@ -15,7 +15,6 @@ app.get("/update", Controller.viewUpdatePage);
 app.get('/updateRecord', Controller.updateRecord);
 app.get("/insert", Controller.viewInsertPage);
 app.get("/insertRecord", Controller.insertRecord);
-app.get("/getNode", Controller.getNode);
 app.get("/top10", Controller.top10);
 app.get("/next", Controller.Next100);
 app.get("/prev", Controller.Prev100);
