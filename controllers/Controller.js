@@ -678,7 +678,8 @@ const controller = {
 					}
 
 
-                // Add error page
+				if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
+					res.render('error');
                 else
                     res.render('insertSuccess')
 	},
@@ -696,6 +697,7 @@ const controller = {
 			con1.query("COMMIT", function (err5, data, fields) {
 			});
 			});
+			
 		}
 
 		else
@@ -769,7 +771,8 @@ const controller = {
 			});
 		}
 
-        // Render error page
+        if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
+			res.render('error');
         else
             res.render('Home');
 	},
