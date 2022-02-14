@@ -246,7 +246,7 @@ const controller = {
 
 					// else Render error screen
 					if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
-						res.render('Home');
+						res.render('error');
 
 	},
 
@@ -306,7 +306,7 @@ const controller = {
 
 		// else Render error screen
 		if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
-			res.render('Home');
+			res.render('error');
 	},
 
 	Prev100: function (req, res) {
@@ -368,7 +368,7 @@ const controller = {
 
 		// else Render error screen
 		if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
-			res.render('Home');
+			res.render('error');
 	},
 
 	rowDelete: function (req, res) {
@@ -523,6 +523,9 @@ const controller = {
 						}
 
 					}
+
+				if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
+					res.render('error');
 	},
 
 
@@ -696,6 +699,9 @@ const controller = {
 					}); // end 2
 					}); // end 3
 					}
+
+				if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
+					res.render('error');
 	},
 
 	getNode: function(req, res){
@@ -749,6 +755,9 @@ const controller = {
 				});
 			});
 		}
+
+		if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
+			res.render('error');
 	},
 
 	searchMovie: function (req, res){
@@ -791,6 +800,9 @@ const controller = {
 				});
 			});
 		}
+
+		if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
+			res.render('error');
 	},
 
 	viewUpdatePage: function (req, res) {
@@ -933,6 +945,9 @@ const controller = {
 			}
 
 		}
+
+		if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
+			res.render('error');
 
 		details.idNum = idNum;
 		details.name = movieName;
