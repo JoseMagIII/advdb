@@ -22,8 +22,8 @@ const con3 = mysql.createConnection({
 	database: "imdb"
 });
 
-var node1isOn = false;
-var node2isOn = false;
+var node1isOn = true;
+var node2isOn = true;
 var node3isOn = true;
 
 var offset = 0;
@@ -933,6 +933,27 @@ const controller = {
 		console.log("NAME: " + movieName + " " + details.name);
 
 		res.render('updateSuccess', details);
+	},
+
+	setIsolationLevel: function (req, res){
+		let iLevel = req.query.selectedLevel;
+
+		if (node1isOn){
+			con1.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
+				console.log("SET TRANSACTION ISOLATION LEVEL " + iLevel);
+			});
+		}
+		if(node2isOn && node3isOn){
+			con2.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
+				console.log("SET TRANSACTION ISOLATION LEVEL " + iLevel);
+			});
+			con3.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
+				console.log("SET TRANSACTION ISOLATION LEVEL " + iLevel);
+			});
+		}
+		if(!node1isOn && !node2isOn && !node3isOn){
+			res.render('error');
+		}
 	}
 
 }

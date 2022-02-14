@@ -41,5 +41,15 @@ $(document).ready(function () {
 
         $.get('/update', {ID: ID, rowNAME: rowNAME, rowYEAR: rowYEAR, rowRANK: rowRANK}, function (result) {
         });
-    })
+    });
+
+    $("select.isolationLevels").on('change', function () {
+        let selectedLevel = $(this).children("option:selected").text();
+
+        console.log(selectedLevel);
+        $.get('/setIsolationLevel', {selectedLevel: selectedLevel}, function (result){
+
+        });
+    });
+
 });

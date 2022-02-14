@@ -19,6 +19,7 @@ app.get("/top10", Controller.top10);
 app.get("/next", Controller.Next100);
 app.get("/prev", Controller.Prev100);
 app.get("/searchMovie", Controller.searchMovie);
+app.get("/setIsolationLevel", Controller.setIsolationLevel);
 //Reference
 //app.get(`/addComment`, GameController.addComment);
 
