@@ -777,8 +777,6 @@ const controller = {
 
         if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
 			res.render('error');
-        else
-            res.render('Home');
 	},
 
 	viewUpdatePage: function (req, res) {
@@ -942,6 +940,11 @@ const controller = {
 			con1.query("SET SESSION TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
 				console.log("SET SESSION TRANSACTION ISOLATION LEVEL " + iLevel);
 			});
+			con1.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
+				con1.query("SELECT @@transaction_ISOLATION", function (err, result){
+					console.log(result);
+				});
+			});
 		}
 		if(node2isOn && node3isOn && (iLevel != "--Select--")){
 			con2.query("SET SESSION TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
@@ -950,15 +953,21 @@ const controller = {
 			con3.query("SET SESSION TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
 				console.log("SET SESSION TRANSACTION ISOLATION LEVEL " + iLevel);
 			});
+			con2.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
+				con2.query("SELECT @@transaction_ISOLATION", function (err, result){
+					console.log(result);
+				});
+			});
+			con3.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
+				con3.query("SELECT @@transaction_ISOLATION", function (err, result){
+					console.log(result);
+				});
+			});
 		}
 		if(!node1isOn && !node2isOn && !node3isOn){
 			res.render('error');
 		}
-		con1.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
-			con1.query("SELECT @@transaction_ISOLATION", function (err, result){
-				console.log(result);
-			});
-		});
+
 	}
 
 }
