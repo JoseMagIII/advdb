@@ -7,11 +7,25 @@
 	<title>Initial Page</title>
   </head> 
   <body>
-      <div style="position: relative; top: 20px; right: 50px; text-align: right;">
-          <a href="/insert"><button id="btnInsert"> Insert New Record </button> </a>
-          <a href="/top10"><button id="top10"> Show top 10</button> </a>
-          <a href="/"><button id="getAll">Show All</button> </a>
-        </div>
+      <div style="display: flex; flex-direction: row; justify-content: space-between;">
+          <div style="position: relative; top: 20px; left: 50px">
+              <form>
+                  <label for="cars">Select Isolation Level:</label>
+
+                  <select name="isolationLevels" id="isolationLevels">
+                      <option value="readUncommitted">Read Uncommitted</option>
+                      <option value="readCommitted">Read Committed</option>
+                      <option value="repeatableRead">Repeatable Read</option>
+                      <option value="serializable">Serializable</option>
+                  </select>
+              </form>
+          </div>
+          <div style="position: relative; top: 20px; right: 50px; text-align: right;">
+              <a href="/insert"><button id="btnInsert"> Insert New Record </button> </a>
+              <a href="/top10"><button id="top10"> Show top 10</button> </a>
+              <a href="/"><button id="getAll">Show All</button> </a>
+          </div>
+      </div>
         <br>
         <br>
         <div style="position: relative; top: 0px; right: 50px; text-align: right;">
