@@ -938,12 +938,12 @@ const controller = {
 	setIsolationLevel: function (req, res){
 		let iLevel = req.query.selectedLevel;
 
-		if (node1isOn){
+		if (node1isOn && (iLevel != "--Select--")){
 			con1.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
 				console.log("SET TRANSACTION ISOLATION LEVEL " + iLevel);
 			});
 		}
-		if(node2isOn && node3isOn){
+		if(node2isOn && node3isOn && (iLevel != "--Select--")){
 			con2.query("SET TRANSACTION ISOLATION LEVEL " + iLevel, function (err, result){
 				console.log("SET TRANSACTION ISOLATION LEVEL " + iLevel);
 			});
@@ -954,6 +954,8 @@ const controller = {
 		if(!node1isOn && !node2isOn && !node3isOn){
 			res.render('error');
 		}
+
+
 	}
 
 }
