@@ -510,7 +510,11 @@ const controller = {
 	//controller for view insert page
 	viewInsertPage: function(req, res){
 		var details = {};
-		res.render('Insert', details);
+
+		if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
+			res.render('error');
+		else
+			res.render('Insert', details);
 	},
 
 	insertRecord: function (req, res) {
@@ -784,6 +788,9 @@ const controller = {
 		let rank = req.param("rank");
 		let details = {};
 
+		if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
+			res.render('error');
+			
 		console.log(movieName);
 		details.idNum = idNum;
 		details.name = movieName;
