@@ -234,6 +234,66 @@ const controller = {
 		// If node 1 is online load from node 1
 		if (node1isOn) {
 
+			// Recover to/from node 2
+			if(node2isOn)
+			{
+				con2.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+						con1.query(ROW.QUERY, function (err5, data, fields) {
+
+						});
+					});
+
+					if(node2isOn)
+						con2.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+
+						});
+				});
+			}
+
+			// Recover from node 3
+			if(node3isOn)
+			{
+				con3.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+						con1.query(ROW.QUERY, function (err5, data, fields) {
+
+						});
+					});
+					if(node1isOn)
+						con3.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+
+						});
+				});
+			}
+
+			if(node2isOn && node3isOn)
+			{
+				con1.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+
+						if(ROW.NODE == "node2")
+							con2.query(ROW.QUERY, function (err5, data, fields) {
+
+							});
+
+						else
+							con3.query(ROW.QUERY, function (err5, data, fields) {
+
+							});
+					});
+
+					if(node1isOn)
+						con1.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+						});
+				});
+			}
+
+
+
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 
 			});
@@ -308,6 +368,65 @@ const controller = {
 
 		// If node 1 is online load from node 1
 		if (node1isOn) {
+
+			// Recover to/from node 2
+			if(node2isOn)
+			{
+				con2.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+						con1.query(ROW.QUERY, function (err5, data, fields) {
+
+						});
+					});
+
+					if(node2isOn)
+						con2.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+
+						});
+				});
+			}
+
+			// Recover from node 3
+			if(node3isOn)
+			{
+				con3.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+						con1.query(ROW.QUERY, function (err5, data, fields) {
+
+						});
+					});
+					if(node1isOn)
+						con3.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+
+						});
+				});
+			}
+
+			if(node2isOn && node3isOn)
+			{
+				con1.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+
+						if(ROW.NODE == "node2")
+							con2.query(ROW.QUERY, function (err5, data, fields) {
+
+							});
+
+						else
+							con3.query(ROW.QUERY, function (err5, data, fields) {
+
+							});
+					});
+
+					if(node1isOn)
+						con1.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+						});
+				});
+			}
+
 
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 
@@ -730,6 +849,65 @@ const controller = {
 
 	top10: function(req, res){
 		if(node1isOn) {
+
+			// Recover to/from node 2
+			if(node2isOn)
+			{
+				con2.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+						con1.query(ROW.QUERY, function (err5, data, fields) {
+
+						});
+					});
+
+					if(node2isOn)
+						con2.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+
+						});
+				});
+			}
+
+			// Recover from node 3
+			if(node3isOn)
+			{
+				con3.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+						con1.query(ROW.QUERY, function (err5, data, fields) {
+
+						});
+					});
+					if(node1isOn)
+						con3.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+
+						});
+				});
+			}
+
+			if(node2isOn && node3isOn)
+			{
+				con1.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+
+						if(ROW.NODE == "node2")
+							con2.query(ROW.QUERY, function (err5, data, fields) {
+
+							});
+
+						else
+							con3.query(ROW.QUERY, function (err5, data, fields) {
+
+							});
+					});
+
+					if(node1isOn)
+						con1.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+						});
+				});
+			}
+
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 			});
 			// Delay
@@ -790,6 +968,64 @@ const controller = {
 		console.log(search);
 
 		if(node1isOn) {
+
+			// Recover to/from node 2
+			if(node2isOn)
+			{
+				con2.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+						con1.query(ROW.QUERY, function (err5, data, fields) {
+
+						});
+					});
+
+					if(node2isOn)
+						con2.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+
+						});
+				});
+			}
+
+			// Recover from node 3
+			if(node3isOn)
+			{
+				con3.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+						con1.query(ROW.QUERY, function (err5, data, fields) {
+
+						});
+					});
+					if(node1isOn)
+						con3.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+
+						});
+				});
+			}
+
+			if(node2isOn && node3isOn)
+			{
+				con1.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
+
+					data.forEach(function(ROW) {
+
+						if(ROW.NODE == "node2")
+							con2.query(ROW.QUERY, function (err5, data, fields) {
+
+							});
+
+						else
+							con3.query(ROW.QUERY, function (err5, data, fields) {
+
+							});
+					});
+
+					if(node1isOn)
+						con1.query("TRUNCATE TABLE RECOVERY", function (err5, data, fields) {
+						});
+				});
+			}
 
 			con1.query("START TRANSACTION", function (err5, data, fields) {
 			});
