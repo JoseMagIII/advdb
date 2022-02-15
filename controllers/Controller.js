@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const con1 = mysql.createConnection({
 	host: "node1.ckcjtnmnctpq.ap-southeast-1.rds.amazonaws.com",
 	user: "admin",
-	password: "password",
+	password: "advdb123",
 	database: "imdb"
 });
 
@@ -18,7 +18,7 @@ const con2 = mysql.createConnection({
 const con3 = mysql.createConnection({
 	host: "node3.cqjwsskq0j94.ap-southeast-1.rds.amazonaws.com",
 	user: "admin",
-	password: "password",
+	password: "advdb123",
 	database: "imdb"
 });
 
