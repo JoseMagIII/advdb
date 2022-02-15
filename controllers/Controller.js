@@ -724,8 +724,6 @@ const controller = {
 				if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
 					res.render('error');
 
-                else
-                    res.render('insertSuccess')
 	},
 
 

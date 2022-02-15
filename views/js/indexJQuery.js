@@ -3,9 +3,6 @@ $(document).ready(function () {
 //AJAX for like buttons
 
     $(window).on( "load", function() {
-        $.get('/getNode', function (result) {
-            alert(result)
-        });
 
         $.get('/getNodeStatus', function (result) {
             if (result[0]) {
