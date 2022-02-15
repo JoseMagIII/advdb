@@ -31,7 +31,7 @@ app.use(express.urlencoded({extended: true}));
 
 dotenv.config();
 port = process.env.PORT || 3000;
-hostname = process.env.HOSTNAME;
+hostname = 0.0.0.0;
 
 
 app.listen(port, hostname, function () {
