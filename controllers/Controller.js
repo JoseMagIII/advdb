@@ -1035,9 +1035,7 @@ const controller = {
 		}
 	},
 
-
-
-	disableNode: function (req, res)  {
+	toggleNode: function (req, res)  {
 		let node = req.query.node;
 		
 		if (node == 'Node 1') {

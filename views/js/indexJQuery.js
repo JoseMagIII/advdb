@@ -62,8 +62,8 @@ $(document).ready(function () {
 
     $(".nodes").on('click', function () {
         let node = $(this).parent().text().trim();
-        
-        $.get('/disableNode', {node: node}, function () {
+        console.log("NODE: " + node);
+        $.get('/toggleNode', {node: node}, function () {
         });
     });
 
@@ -71,9 +71,7 @@ $(document).ready(function () {
         let selectedLevel = $(this).children("option:selected").text();
 
         console.log(selectedLevel);
-        $.get('/setIsolationLevel', {selectedLevel: selectedLevel}, function (result) {
+        $.get('/setIsolationLevel', {selectedLevel: selectedLevel}, function (result){
         });
-
-        });
-
+    });
 });

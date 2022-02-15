@@ -20,7 +20,7 @@ app.get("/next", Controller.Next100);
 app.get("/prev", Controller.Prev100);
 app.get("/searchMovie", Controller.searchMovie);
 app.get("/setIsolationLevel", Controller.setIsolationLevel);
-app.get("/disableNode", Controller.disableNode);
+app.get("/toggleNode", Controller.toggleNode);
 app.get("/getNodeStatus", Controller.getNodeStatus);
 //Reference
 //app.get(`/addComment`, GameController.addComment);
