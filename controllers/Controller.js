@@ -111,6 +111,7 @@ const controller = {
 						{
 							con2.query("SELECT * FROM RECOVERY", function (err5, data, fields) {
 
+
 								data.forEach(function(ROW) {
 									con1.query(ROW.QUERY, function (err5, data, fields) {
 
@@ -165,21 +166,24 @@ const controller = {
 						}
 
 						if(node1isOn) {
-							con1.query("START TRANSACTION", function (err5, data, fields) {
+							setTimeout(function() {
+								con1.query("START TRANSACTION", function (err5, data, fields) {
 
-							});
+								});
 
-							if(node1isOn)
-							con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
+								if(node1isOn)
+									con1.query("SELECT * FROM movies LIMIT 100", function (err5, data, fields) {
 
-								res.render('Home', {data});
-							});
-							// Delay
-							con1.query("DO SLEEP(2)", function (err5, data, fields) {
-							});
-							con1.query("COMMIT", function (err5, data, fields) {
+										res.render('Home', {data});
+									});
+								// Delay
+								con1.query("DO SLEEP(2)", function (err5, data, fields) {
+								});
+								con1.query("COMMIT", function (err5, data, fields) {
 
-							});
+								});
+							}, 500);
+
 						}
 					}
 
@@ -187,39 +191,40 @@ const controller = {
 					// If node 2 and 3 are online load from node 2 and 3
 					if (!node1isOn && node2isOn && node3isOn) {
 
-						con2.query("START TRANSACTION", function (err5, data, fields) {
+						setTimeout(function() {
+							con2.query("START TRANSACTION", function (err5, data, fields) {
 
-						});
-						// Delay
+							});
+							// Delay
+							con2.query("SELECT * FROM movies LIMIT 100", function (err3, data2, fields) {
 
-						con2.query("SELECT * FROM movies LIMIT 100", function (err3, data2, fields) {
-
-						con2.query("COMMIT", function (err5, data, fields) {
-						});
-						con2.query("DO SLEEP(2)", function (err5, data, fields) {
-						});
-
-							if(node2isOn) {
-
-								con3.query("START TRANSACTION", function (err5, data, fields) {
-
+								con2.query("COMMIT", function (err5, data, fields) {
 								});
-								if(node3isOn)
-								con3.query("SELECT * FROM movies LIMIT 100", function (err4, data3, fields) {
-								// Delay
-								con3.query("DO SLEEP(2)", function (err5, data, fields) {
+								con2.query("DO SLEEP(2)", function (err5, data, fields) {
 								});
-									data = [];
-									data = data.concat(data3, data2);
-									// D KO ALAM PANO ISORT YUNG DATA
-									data = sortItems(data)
-									res.render('Home', {data});
-								});
-								con3.query("COMMIT", function (err5, data, fields) {
 
-								});
-							}
-						});
+								if (node2isOn) {
+
+									con3.query("START TRANSACTION", function (err5, data, fields) {
+
+									});
+									if (node3isOn)
+										con3.query("SELECT * FROM movies LIMIT 100", function (err4, data3, fields) {
+											// Delay
+											con3.query("DO SLEEP(2)", function (err5, data, fields) {
+											});
+											data = [];
+											data = data.concat(data3, data2);
+											// D KO ALAM PANO ISORT YUNG DATA
+											data = sortItems(data)
+											res.render('Home', {data});
+										});
+									con3.query("COMMIT", function (err5, data, fields) {
+
+									});
+								}
+							});
+						}, 500);
 					}
 
 					// else Render error screen
@@ -300,59 +305,63 @@ const controller = {
 
 
 			if(node1isOn)
-			con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
+				setTimeout(function() {
+					con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
 
-				res.render('Home', {data});
-			});
+						res.render('Home', {data});
+					});
 
-			// Delay
-			con1.query("DO SLEEP(2)", function (err5, data, fields) {
-			});
-			con1.query("COMMIT", function (err5, data, fields) {
+					// Delay
+					con1.query("DO SLEEP(2)", function (err5, data, fields) {
+					});
+					con1.query("COMMIT", function (err5, data, fields) {
 
-			});
+					});
+				}, 500);
 		}
 
 		// If node 2 and 3 are online load from node 2 and 3
 		 if (!node1isOn && node2isOn && node3isOn) {
 			offsethere = offset/2
 
-			con2.query("START TRANSACTION", function (err5, data, fields) {
+			 setTimeout(function() {
+				 con2.query("START TRANSACTION", function (err5, data, fields) {
 
-			});
+				 });
 
-			con2.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err3, data2, fields) {
+				 con2.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err3, data2, fields) {
 
-			// Delay
-			con2.query("DO SLEEP(2)", function (err5, data, fields) {
-			});
-			con2.query("COMMIT", function (err5, data, fields) {
-			});
+					 // Delay
+					 con2.query("DO SLEEP(2)", function (err5, data, fields) {
+					 });
+					 con2.query("COMMIT", function (err5, data, fields) {
+					 });
 
-				if(node2isOn) {
+					 if (node2isOn) {
 
-					con3.query("START TRANSACTION", function (err5, data, fields) {
+						 con3.query("START TRANSACTION", function (err5, data, fields) {
 
-					});
+						 });
 
-					if(node3isOn)
-					con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
+						 if (node3isOn)
+							 con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
 
 
-						data = [];
-						data = data.concat(data3, data2);
-						// D KO ALAM PANO ISORT YUNG DATA
-						data = sortItems(data)
-						res.render('Home', {data});
-					});
-					// Delay
-					con3.query("DO SLEEP(2)", function (err5, data, fields) {
-					});
-					con3.query("COMMIT", function (err5, data, fields) {
+								 data = [];
+								 data = data.concat(data3, data2);
+								 // D KO ALAM PANO ISORT YUNG DATA
+								 data = sortItems(data)
+								 res.render('Home', {data});
+							 });
+						 // Delay
+						 con3.query("DO SLEEP(2)", function (err5, data, fields) {
+						 });
+						 con3.query("COMMIT", function (err5, data, fields) {
 
-					});
-				}
-			});
+						 });
+					 }
+				 });
+			 }, 500);
 		}
 
 		// else Render error screen
@@ -429,63 +438,66 @@ const controller = {
 
 
 			con1.query("START TRANSACTION", function (err5, data, fields) {
-
 			});
 			// Delay
 
 			if(node1isOn)
-				con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
+				setTimeout(function() {
+					con1.query("SELECT * FROM movies LIMIT 100 OFFSET " + offset, function (err5, data, fields) {
 
-					res.render('Home', {data});
-				});
-			con1.query("DO SLEEP(2)", function (err5, data, fields) {
-			});
-			con1.query("COMMIT", function (err5, data, fields) {
+						res.render('Home', {data});
+					});
+					con1.query("DO SLEEP(2)", function (err5, data, fields) {
+					});
+					con1.query("COMMIT", function (err5, data, fields) {
 
-			});
+					});
+				}, 500);
 		}
 
 		// If node 2 and 3 are online load from node 2 and 3
 		if (!node1isOn && node2isOn && node3isOn) {
 			offsethere = offset/2
 
-			con2.query("START TRANSACTION", function (err5, data, fields) {
+			setTimeout(function() {
+				con2.query("START TRANSACTION", function (err5, data, fields) {
 
-			});
-
-			con2.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err3, data2, fields) {
-
-				// Delay
-				con2.query("DO SLEEP(2)", function (err5, data, fields) {
 				});
 
-				con2.query("COMMIT", function (err5, data, fields) {
-				});
+				con2.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err3, data2, fields) {
 
-				if(node2isOn) {
-
-					con3.query("START TRANSACTION", function (err5, data, fields) {
-
-					});
-
-					if(node3isOn)
-						con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
-
-
-							data = [];
-							data = data.concat(data3, data2);
-							// D KO ALAM PANO ISORT YUNG DATA
-							data = sortItems(data)
-							res.render('Home', {data});
-						});
 					// Delay
-					con3.query("DO SLEEP(2)", function (err5, data, fields) {
+					con2.query("DO SLEEP(2)", function (err5, data, fields) {
 					});
-					con3.query("COMMIT", function (err5, data, fields) {
 
+					con2.query("COMMIT", function (err5, data, fields) {
 					});
-				}
-			});
+
+					if (node2isOn) {
+
+						con3.query("START TRANSACTION", function (err5, data, fields) {
+
+						});
+
+						if (node3isOn)
+							con3.query("SELECT * FROM movies LIMIT 100 OFFSET " + offsethere, function (err4, data3, fields) {
+
+
+								data = [];
+								data = data.concat(data3, data2);
+								// D KO ALAM PANO ISORT YUNG DATA
+								data = sortItems(data)
+								res.render('Home', {data});
+							});
+						// Delay
+						con3.query("DO SLEEP(2)", function (err5, data, fields) {
+						});
+						con3.query("COMMIT", function (err5, data, fields) {
+
+						});
+					}
+				});
+			}, 500);
 		}
 
 		// else Render error screen
@@ -912,50 +924,53 @@ const controller = {
 			});
 			// Delay
 
-			con1.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data, fields) {
-				if (err5) throw err5;
+			setTimeout(function() {
+				con1.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data, fields) {
+					if (err5) throw err5;
 
-				con1.query("DO SLEEP(2)", function (err5, data, fields) {
+					con1.query("DO SLEEP(2)", function (err5, data, fields) {
+					});
+					res.render('Home', {data});
+					con1.query("COMMIT", function (err5, data, fields) {
+					});
 				});
-				res.render('Home', {data});
-			con1.query("COMMIT", function (err5, data, fields) {
-			});
-			});
-			
+			}, 500);
 		}
 
 		else
 		if(node2isOn && node3isOn)
 		{
-			con2.query("START TRANSACTION", function (err5, data, fields) {
-			});
-
-			con2.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data1, fields) {
-				if (err5) throw err5;
-
-				// Delay
-				con2.query("DO SLEEP(2)", function (err5, data, fields) {
+			setTimeout(function() {
+				con2.query("START TRANSACTION", function (err5, data, fields) {
 				});
-			con2.query("COMMIT", function (err5, data, fields) {
-			});
 
-				con3.query("START TRANSACTION", function (err5, data, fields) {
-				});
-				// Delay
-				con3.query("DO SLEEP(2)", function (err5, data, fields) {
-				});
-				con3.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data2, fields) {
+				con2.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data1, fields) {
 					if (err5) throw err5;
 
-					data = [];
-					data = data.concat(data1, data2);
+					// Delay
+					con2.query("DO SLEEP(2)", function (err5, data, fields) {
+					});
+					con2.query("COMMIT", function (err5, data, fields) {
+					});
 
-					data = sorItemstop10(data);
-					res.render('Home', {data});
-				});
-				con3.query("COMMIT", function (err5, data, fields) {
-				});
-			});
+					con3.query("START TRANSACTION", function (err5, data, fields) {
+					});
+					// Delay
+					con3.query("DO SLEEP(2)", function (err5, data, fields) {
+					});
+					con3.query("SELECT * FROM imdb.movies ORDER BY `rank` DESC LIMIT 10;", function (err5, data2, fields) {
+						if (err5) throw err5;
+
+						data = [];
+						data = data.concat(data1, data2);
+
+						data = sorItemstop10(data);
+						res.render('Home', {data});
+					});
+					con3.query("COMMIT", function (err5, data, fields) {
+					});
+				})
+			}, 500);
 		}
 
 		if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
@@ -1026,53 +1041,59 @@ const controller = {
 						});
 				});
 			}
+			if(node1isOn) {
+				setTimeout(function() {
+					con1.query("START TRANSACTION", function (err5, data, fields) {
+					});
 
-			con1.query("START TRANSACTION", function (err5, data, fields) {
-			});
+					con1.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data, fields) {
+						if (err5) throw err5;
 
-			con1.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data, fields) {
-				if (err5) throw err5;
+						// Delay
+						con1.query("DO SLEEP(2)", function (err5, data, fields) {
+						});
+						res.render('Home', {data});
+						con1.query("COMMIT", function (err5, data, fields) {
+						});
+					});
+				}, 500);
+			}
 
-				// Delay
-				con1.query("DO SLEEP(2)", function (err5, data, fields) {
-				});
-				res.render('Home', {data});
-				con1.query("COMMIT", function (err5, data, fields) {
-				});
-			});
 		}
 
 		else if(node2isOn && node3isOn){
-			con2.query("START TRANSACTION", function (err5, data, fields) {
-			});
-
-			con2.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data1, fields) {
-				if (err5) throw err5;
-
-				// Delay
-				con2.query("DO SLEEP(2)", function (err5, data, fields) {
-				});
-				con2.query("COMMIT", function (err5, data, fields) {
+			setTimeout(function() {
+				con2.query("START TRANSACTION", function (err5, data, fields) {
 				});
 
-				con3.query("START TRANSACTION", function (err5, data, fields) {
-				});
-
-				con3.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data2, fields) {
+				con2.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data1, fields) {
 					if (err5) throw err5;
 
 					// Delay
-					con3.query("DO SLEEP(2)", function (err5, data, fields) {
+					con2.query("DO SLEEP(2)", function (err5, data, fields) {
+					});
+					con2.query("COMMIT", function (err5, data, fields) {
 					});
 
-					data = [];
-					data = data.concat(data1, data2);
+					con3.query("START TRANSACTION", function (err5, data, fields) {
+					});
 
-					res.render('Home', {data});
+					con3.query("SELECT * FROM imdb.movies WHERE `name` LIKE \"" + search + "%\";", function (err5, data2, fields) {
+						if (err5) throw err5;
+
+						// Delay
+						con3.query("DO SLEEP(2)", function (err5, data, fields) {
+						});
+
+						data = [];
+						data = data.concat(data1, data2);
+
+						res.render('Home', {data});
+					});
+					con3.query("COMMIT", function (err5, data, fields) {
+					});
 				});
-				con3.query("COMMIT", function (err5, data, fields) {
-				});
-			});
+			}, 500);
 		}
 
         if((!node1isOn && !node2isOn && !node3isOn) || (!node1isOn && !node2isOn && node3isOn) || (!node1isOn && node2isOn && !node3isOn))
