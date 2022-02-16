@@ -8,9 +8,9 @@ const con1 = mysql.createConnection({
 });
 
 const con2 = mysql.createConnection({
-	host: "node2.c0sjx10dpii7.ap-southeast-1.rds.amazonaws.com",
+	host: "node-2.c0sjx10dpii7.ap-southeast-1.rds.amazonaws.com",
 	user: "admin",
-	password: "password",
+	password: "advdb123",
 	database: "imdb"
 });
 
